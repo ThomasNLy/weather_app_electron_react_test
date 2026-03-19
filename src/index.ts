@@ -61,7 +61,9 @@ ipcMain.handle("get-weather-data", async () => {
 
 import path from "path";
 import dotenv from "dotenv";
-let weatherDataCache: { data: any; timeStamp: number } = {
+import { IWeatherData, IAPIResponse } from "./typings";
+
+let weatherDataCache: { data: IWeatherData; timeStamp: number } = {
     data: null,
     timeStamp: 0,
 };
@@ -87,20 +89,39 @@ async function fetchWeather() {
             }
             const data = await response.json();
 
-            let weatherData = {
-                unit: data.daily_units.apparent_temperature_max,
-                dailyMaxTemp: data.daily.apparent_temperature_max,
-                dailyMinTemp: data.daily.apparent_temperature_min,
+            let weatherData: IWeatherData = {
+                isDay: data.current.is_day == 1 ? "Day" : "Night",
+                utcOffSetSeconds: data.utc_offset_seconds,
+                units: {
+                    temperature: data.daily_units.apparent_temperature_max,
+                    precipitation: data.daily_units.precipitation_probability_max,
+                },
+                currentApparentTemp: data.current.apparent_temperature,
+                currentTemp: data.current.temperature_2m,
+                forecastDays: data.daily.time,
+                weatherCode: data.daily.weather_code,
+                dailyMaxTemp: data.daily.temperature_2m_max,
+                dailyMinTemp: data.daily.temperature_2m_min,
+                dailyMaxApparentTemp: data.daily.apparent_temperature_max,
+                dailyMinApparentTemp: data.daily.apparent_temperature_min,
+                precipitationChance: data.daily.precipitation_probability_max,
             };
             weatherDataCache.data = weatherData;
             weatherDataCache.timeStamp = Date.now();
+            let apiResponse: IAPIResponse = {
+                status: true,
+                weatherData: weatherData,
+            };
 
-            //console.log(weatherData);
-            return weatherData;
+            return apiResponse;
         } else {
             console.log("cached weather data");
-
-            return weatherDataCache.data;
+            console.log(weatherDataCache);
+            let apiResponse: IAPIResponse = {
+                status: true,
+                weatherData: weatherDataCache.data,
+            };
+            return apiResponse;
         }
     } catch (error) {
         console.error("Error fetching data: ", error);
