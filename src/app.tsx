@@ -35,9 +35,10 @@ function App() {
             apparentTemp: Math.round(weatherData.currentApparentTemp),
             currentTemp: Math.round(weatherData.currentTemp),
             weatherCode: weatherData.weatherCode[0],
+            isDayCode: weatherData.isDay,
         };
         return (
-            <Fragment>
+            <div className="app-main-content">
                 <h2>Weather App</h2>
                 <CurrentDayWeatherBanner
                     unit={weatherData.units.temperature}
@@ -45,9 +46,10 @@ function App() {
                     apparentTemp={currentWeatherData.apparentTemp}
                     currentTemp={currentWeatherData.currentTemp}
                     weatherCode={currentWeatherData.weatherCode}
+                    isDay={currentWeatherData.isDayCode}
                 />
                 <div className="weather-card-container">{weatherCards}</div>
-            </Fragment>
+            </div>
         );
     }
 }

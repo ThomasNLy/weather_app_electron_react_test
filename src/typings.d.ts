@@ -47,7 +47,7 @@ declare global {
  * @property {number[]} percipitation - array of daily percipitation percentage
  */
 export interface IWeatherData {
-    isDay: string;
+    isDay: boolean;
     utcOffSetSeconds: number;
     units: {
         temperature: string;

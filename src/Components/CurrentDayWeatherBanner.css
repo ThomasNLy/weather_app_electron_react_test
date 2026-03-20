@@ -1,7 +1,36 @@
 .weather-banner {
-    width: 70%;
+    width: 80%;
     aspect-ratio: 16 / 5;
     margin-right: auto;
     margin-left: auto;
     background-color: burlywood;
+}
+.current-weather-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
+    height: fit-content;
+    column-gap: 2em;
+}
+.current-weather-data-container {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    align-items: start;
+}
+.current-weather-data-container p,
+.current-weather-data-container h2 {
+    margin-block: 0;
+}
+
+.current-weather-data-container h2 {
+    font-size: 3.12rem;
+}
+.current-weather-current-temp {
+    font-size: 3.12rem;
+    font-weight: bold;
+}
+.weather-banner-additional-weather-data {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: fit-content;
 }

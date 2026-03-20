@@ -1,6 +1,12 @@
 import React from "react";
 import "./WeatherCard.css";
-import { WEATHERCODES } from ".././utilities";
+import { WEATHERCODES } from "../utilities";
+import cloudyIcon from "../assets/icons_96/cloudy_96.png";
+import rainIcon from "../assets/icons_96/rain_96.png";
+import snowIcon from "../assets/icons_96/snowflake5_96.png";
+import sunIcon from "../assets/icons_96/sun_daisy1_96.png";
+import thunderIcon from "../assets/icons_96/thunder_96.png";
+import fogIcon from "../assets/icons_96/fog_96.png";
 
 interface IWeatherCardProps {
     /** object containing weather data */
@@ -20,13 +26,16 @@ interface IWeatherCardProps {
  * @returns TSX.Element
  */
 export default function WeatherCard({ weatherData, weekday }: IWeatherCardProps) {
-    console.log(weatherData);
     return (
         <div className="weather-card">
-            <h2>{weekday}</h2>
-            <p>{weatherStatusIcon(weatherData.weatherCode)}</p>
-            <p>{`${weatherData.dailyMaxTemp}${weatherData.unit}`} </p>
-            <p>{`${weatherData.dailyMinTemp}${weatherData.unit}`}</p>
+            <div className="weather-card-data-container">
+                <img src={weatherStatusIcon(weatherData.weatherCode)} alt="" />
+                <div className="weather-card-data-temp-container">
+                    <p className="temp-text">{`${weatherData.dailyMaxTemp}${weatherData.unit}`} </p>
+                    <p className="temp-text">{`${weatherData.dailyMinTemp}${weatherData.unit}`}</p>
+                </div>
+            </div>
+            <h2 className="weekday">{weekday}</h2>
         </div>
     );
 }
@@ -35,20 +44,20 @@ export default function WeatherCard({ weatherData, weekday }: IWeatherCardProps)
 function weatherStatusIcon(_weatherCode: number) {
     switch (_weatherCode) {
         case WEATHERCODES.CLEAR_SKY:
-            return "thunderous";
+            return thunderIcon;
 
         case WEATHERCODES.MAINLY_CLEAR:
-            return "clear";
+            return sunIcon;
 
         case WEATHERCODES.PARTLY_CLOUDY:
-            return "partly cloudy";
+            return cloudyIcon;
 
         case WEATHERCODES.OVERCAST:
-            return "cloudy";
+            return cloudyIcon;
 
         case WEATHERCODES.FOG:
         case WEATHERCODES.DEPOSITING_RIME_FOG:
-            return "fog";
+            return fogIcon;
 
         case WEATHERCODES.DRIZZLE_LIGHT:
         case WEATHERCODES.DRIZZLE_MODERATE:
@@ -62,17 +71,17 @@ function weatherStatusIcon(_weatherCode: number) {
         case WEATHERCODES.FREEZING_RAIN_HEAVY:
         case WEATHERCODES.RAIN_SHOWERS_MODERATE:
         case WEATHERCODES.RAIN_SHOWERS_VIOLENT:
-            return "rain";
+            return rainIcon;
 
         case WEATHERCODES.SNOW_FALL_SLIGHT:
         case WEATHERCODES.SNOW_FALL_MODERATE:
         case WEATHERCODES.SNOW_FALL_HEAVY:
         case WEATHERCODES.SNOW_GRAINS:
-            return "snow";
+            return snowIcon;
 
         case WEATHERCODES.THUNDERSTORM:
         case WEATHERCODES.THUNDERSTORM_LIGHT_HAIL:
         case WEATHERCODES.THUNDERSTORM_HEAVY_HAIL:
-            return "thunderous";
+            return thunderIcon;
     }
 }

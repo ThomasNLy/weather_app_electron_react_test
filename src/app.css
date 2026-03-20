@@ -1,11 +1,16 @@
+.app-main-content {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2em;
+}
 .weather-card-container {
     margin-left: auto;
     margin-right: auto;
     padding: 0 0.3%;
-    width: 70%;
+    width: 80%;
     display: grid;
     grid-auto-flow: column;
     overflow-x: auto;
     grid-auto-columns: 20%;
-    gap: 1px;
+    column-gap: 1px;
 }

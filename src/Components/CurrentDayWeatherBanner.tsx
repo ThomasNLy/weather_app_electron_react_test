@@ -1,15 +1,15 @@
 import React from "react";
 import "./CurrentDayWeatherBanner.css";
 import { WEATHERCODES } from "../utilities";
-import cloudyIcon from "../assets/cloudy_160.png";
-import nightIcon from "../assets/night_160.png";
-import overcastIcon from "../assets/overcast_160.png";
-import partlyCloudyDayIcon from "../assets/partly_cloudy_day_160.png";
-import partlyCloudyNightIcon from "../assets/partly_cloudy_night_160.png";
-import rainIcon from "../assets/rain_160.png";
-import snowIcon from "../assets/snowflake5_160.png";
-import sunIcon from "../assets/sun_daisy1_160.png";
-import thunderIcon from "../assets/thunder_160.png";
+import cloudyIcon from "../assets/icons_160/cloudy_160.png";
+import nightIcon from "../assets/icons_160/night_160.png";
+import partlyCloudyDayIcon from "../assets/icons_160/partly_cloudy_day_160.png";
+import partlyCloudyNightIcon from "../assets/icons_160/partly_cloudy_night_160.png";
+import rainIcon from "../assets/icons_160/rain_160.png";
+import snowIcon from "../assets/icons_160/snowflake5_160.png";
+import sunIcon from "../assets/icons_160/sun_daisy1_160.png";
+import thunderIcon from "../assets/icons_160/thunder_160.png";
+import fogIcon from "../assets/icons_160/fog_160.png";
 
 interface IWeatherBannerProps {
     unit: string;
@@ -17,6 +17,7 @@ interface IWeatherBannerProps {
     apparentTemp: number;
     currentTemp: number;
     weatherCode: number;
+    isDay: boolean;
 }
 export function CurrentDayWeatherBanner({
     unit,
@@ -24,54 +25,71 @@ export function CurrentDayWeatherBanner({
     apparentTemp,
     currentTemp,
     weatherCode,
+    isDay,
 }: IWeatherBannerProps) {
-    let weatherStatus = weatherStatusIcon(weatherCode);
+    let weatherStatus = weatherStatusIcon(weatherCode, isDay);
     return (
         <div className="weather-banner">
-            <h1>Today</h1>
-            <h2>{weatherStatus.status}</h2>
-            <img src={weatherStatus.icon} alt={weatherStatus.status} />
-            <h2>{`${currentTemp}${unit}`}</h2>
-            <div className="additional-stats">
-                <p>low {minTemp}°</p>
-                <p>{`feels like ${apparentTemp}${unit}`}</p>
+            <h1>Current Weather</h1>
+            <div className="current-weather-container">
+                <img src={weatherStatus.icon} alt={weatherStatus.status} />
+                <div className="current-weather-data-container">
+                    <h2>{weatherStatus.status}</h2>
+                    <p className="current-weather-current-temp">{`${currentTemp}${unit}`}</p>
+                    <div className="weather-banner-additional-weather-data">
+                        <p>Low {minTemp}°</p>
+                        <p>{`Feels Like ${apparentTemp}°`}</p>
+                    </div>
+                </div>
             </div>
         </div>
     );
 }
 //fix up later to have it work properly with night/day to have correct icon
 // for clear sky and such
-function weatherStatusIcon(_weatherCode: number) {
+function weatherStatusIcon(_weatherCode: number, _isDay: boolean) {
     switch (_weatherCode) {
         case WEATHERCODES.CLEAR_SKY:
-            return {
-                icon: sunIcon,
-                status: "sunny",
-            };
+            return _isDay === true
+                ? {
+                      icon: sunIcon,
+                      status: "Sunny",
+                  }
+                : {
+                      icon: nightIcon,
+                      status: "Clear Skies",
+                  };
 
         case WEATHERCODES.MAINLY_CLEAR:
-            return {
-                icon: sunIcon,
-                status: "sunny",
-            };
+            return _isDay === true
+                ? {
+                      icon: sunIcon,
+                      status: "Sunny",
+                  }
+                : { icon: nightIcon, status: "Clear Skies" };
 
         case WEATHERCODES.PARTLY_CLOUDY:
-            return {
-                icon: partlyCloudyDayIcon,
-                status: "cloudy",
-            };
+            return _isDay === true
+                ? {
+                      icon: partlyCloudyDayIcon,
+                      status: "Partly Cloudy",
+                  }
+                : {
+                      icon: partlyCloudyNightIcon,
+                      status: "Partly Cloudy",
+                  };
 
         case WEATHERCODES.OVERCAST:
             return {
                 icon: cloudyIcon,
-                status: "cloudy",
+                status: "Cloudy",
             };
 
         case WEATHERCODES.FOG:
         case WEATHERCODES.DEPOSITING_RIME_FOG:
             return {
-                icon: cloudyIcon,
-                status: "fog",
+                icon: fogIcon,
+                status: "Fog",
             };
 
         case WEATHERCODES.DRIZZLE_LIGHT:
@@ -88,7 +106,7 @@ function weatherStatusIcon(_weatherCode: number) {
         case WEATHERCODES.RAIN_SHOWERS_VIOLENT:
             return {
                 icon: rainIcon,
-                status: "rain",
+                status: "Rain",
             };
 
         case WEATHERCODES.SNOW_FALL_SLIGHT:
@@ -97,7 +115,7 @@ function weatherStatusIcon(_weatherCode: number) {
         case WEATHERCODES.SNOW_GRAINS:
             return {
                 icon: snowIcon,
-                status: "snow",
+                status: "Snow",
             };
 
         case WEATHERCODES.THUNDERSTORM:
@@ -105,7 +123,7 @@ function weatherStatusIcon(_weatherCode: number) {
         case WEATHERCODES.THUNDERSTORM_HEAVY_HAIL:
             return {
                 icon: thunderIcon,
-                status: "thunderous",
+                status: "Thunderous",
             };
     }
 }

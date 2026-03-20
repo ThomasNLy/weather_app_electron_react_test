@@ -1,5 +1,24 @@
 .weather-card {
-    width: 100%;
+    width: 95%;
     background-color: rgb(101, 133, 175);
     border-radius: 5%;
+    display: grid;
+    grid-template-rows: auto auto;
+}
+.weekday {
+    text-align: center;
+}
+.weather-card-data-container {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+.weather-card-data-temp-container {
+    display: grid;
+    grid-template-rows: auto auto;
+}
+.temp-text {
+    margin-block: 0;
+    font-size: 1.2rem;
+    text-align: right;
+    margin-right: 0.8em;
 }

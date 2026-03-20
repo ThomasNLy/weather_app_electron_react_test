@@ -14,7 +14,7 @@ if (require("electron-squirrel-startup")) {
 const createWindow = (): void => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
-        height: 600,
+        height: 650,
         width: 800,
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
@@ -90,7 +90,7 @@ async function fetchWeather() {
             const data = await response.json();
 
             let weatherData: IWeatherData = {
-                isDay: data.current.is_day == 1 ? "Day" : "Night",
+                isDay: data.current.is_day == 1 ? true : false,
                 utcOffSetSeconds: data.utc_offset_seconds,
                 units: {
                     temperature: data.daily_units.apparent_temperature_max,
