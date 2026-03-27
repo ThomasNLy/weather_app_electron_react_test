@@ -1,6 +1,26 @@
+/* Themes based on current weather of "Today" forecast */
+.weather-card-clear-sky-theme {
+    background-color: #ededed;
+}
+.weather-card-night-theme {
+    background-color: #dad9d9;
+}
+.weather-card-fog-theme {
+    background-color: #406d7e;
+}
+.weather-card-grey-sky-theme {
+    background-color: #c0c0c0;
+}
+.weather-card-snow-theme {
+    background-color: #c0c0c0;
+}
+.weather-card-thunderous-theme {
+    background-color: #5f86ce;
+}
+/* --------------------------- */
+
 .weather-card {
     width: 95%;
-    background-color: rgb(101, 133, 175);
     border-radius: 5%;
     display: grid;
     grid-template-rows: auto auto;
@@ -11,6 +31,7 @@
 .weather-card-data-container {
     display: grid;
     grid-template-columns: auto auto;
+    padding-left: 0.5em;
 }
 .weather-card-data-temp-container {
     display: grid;

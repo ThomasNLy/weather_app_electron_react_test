@@ -18,6 +18,7 @@ interface IWeatherCardProps {
         weatherCode: number;
     };
     weekday: string;
+    theme: string;
 }
 /**
  *
@@ -25,9 +26,9 @@ interface IWeatherCardProps {
  *
  * @returns TSX.Element
  */
-export default function WeatherCard({ weatherData, weekday }: IWeatherCardProps) {
+export default function WeatherCard({ weatherData, weekday, theme }: IWeatherCardProps) {
     return (
-        <div className="weather-card">
+        <div className={`weather-card weather-card-${theme}`}>
             <div className="weather-card-data-container">
                 <img src={weatherStatusIcon(weatherData.weatherCode)} alt="" />
                 <div className="weather-card-data-temp-container">

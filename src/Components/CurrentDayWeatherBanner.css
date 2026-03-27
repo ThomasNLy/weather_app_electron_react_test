@@ -3,7 +3,11 @@
     aspect-ratio: 16 / 5;
     margin-right: auto;
     margin-left: auto;
-    background-color: burlywood;
+    background-color: rgba(222, 184, 135, 0.199);
+}
+.weather-banner h1 {
+    color: white;
+    font-weight: 600;
 }
 .current-weather-container {
     display: grid;
@@ -20,14 +24,16 @@
 .current-weather-data-container p,
 .current-weather-data-container h2 {
     margin-block: 0;
+    color: white;
 }
 
 .current-weather-data-container h2 {
     font-size: 3.12rem;
+    font-weight: 600;
 }
 .current-weather-current-temp {
     font-size: 3.12rem;
-    font-weight: bold;
+    font-weight: 600;
 }
 .weather-banner-additional-weather-data {
     display: grid;
