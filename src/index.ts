@@ -15,7 +15,7 @@ const createWindow = (): void => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
         height: 650,
-        width: 800,
+        width: 850,
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
         },
@@ -111,6 +111,7 @@ async function fetchWeather() {
             let apiResponse: IAPIResponse = {
                 status: true,
                 weatherData: weatherData,
+                message: "success, connection made",
             };
 
             return apiResponse;
@@ -120,12 +121,18 @@ async function fetchWeather() {
             let apiResponse: IAPIResponse = {
                 status: true,
                 weatherData: weatherDataCache.data,
+                message: "success, connection made",
             };
             return apiResponse;
         }
     } catch (error) {
         console.error("Error fetching data: ", error);
-        return { error: `Failed to fetch weather data: ${error}` };
+        let apiResponse: IAPIResponse = {
+            status: false,
+            weatherData: null,
+            message: `error retrieving weather data, ${error}`,
+        };
+        return apiResponse;
     }
 }
 
