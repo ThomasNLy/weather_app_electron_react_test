@@ -4,56 +4,81 @@ import { createRoot } from "react-dom/client";
 import WeatherCard from "./Components/WeatherCard";
 import { CurrentDayWeatherBanner } from "./Components/CurrentDayWeatherBanner";
 import "./app.css";
-import { IWeatherData } from "./typings";
+import { IAPIResponse, IWeatherData } from "./typings";
+import { WEATHERCODES } from "./utilities";
+import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
 const root = createRoot(document.body);
 root.render(<App />);
 
 function App() {
     const [weatherData, setWeatherData] = useState<IWeatherData>(null);
-    const [dataLoaded, setDataLoaded] = useState<boolean>(false);
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true); // fake loading screen for UX
     useEffect(() => {
-        window.mainProcess.getWeatherData().then((data) => {
-            if (data.status) {
-                setWeatherData(data.weatherData);
-
-                setConnectionStatus(data.status);
-            } else {
-                setConnectionStatus(data.status);
-            }
-            setDataLoaded(true);
-        });
+        const apiCall: Promise<IAPIResponse> = window.mainProcess.getWeatherData();
+        const delayTimer: Promise<any> = new Promise((resolve) => setTimeout(resolve, 1200));
+        const arrayOfPromiseToResolve: Promise<any>[] = [apiCall, delayTimer];
+        /*
+        used to ensure that the data is loaded in when retrieving data from 
+        the weather api and the fake delay is full finished as well for the loading
+        screen in case the data loaded in too quickly for better UX 
+        uses array destucturing to grab a specific promise's resolved result
+        from the array passed in
+        */
+        Promise.all(arrayOfPromiseToResolve)
+            .then(([apiData, delayTimer]: [IAPIResponse, any]) => {
+                if (apiData.status) {
+                    setWeatherData(apiData.weatherData);
+                }
+                setIsLoading(false);
+                setConnectionStatus(apiData.status);
+            })
+            .catch((err) => {
+                console.log("Node js Error with IPC main process probably crashed", err);
+                setConnectionStatus(false);
+                setIsLoading(false);
+            });
     }, []);
-    if (!dataLoaded) {
-        return <p>Loading weather data...</p>;
+
+    if (isLoading) {
+        return (
+            <div className="loading-screen">
+                <img src={loadingScreenIcon} alt="Loading Screen Icon of a sun covered by clouds" />
+                <p>Loading weather data...</p>
+            </div>
+        );
     } else if (connectionStatus === false) {
         return <h1>Error retrieving weather data. Try Again later</h1>;
-    } else if (connectionStatus && dataLoaded) {
-        const weatherCards = createWeatherCards(weatherData);
+    } else if (connectionStatus) {
         let currentWeatherData = {
             minTemp: Math.round(weatherData.dailyMinTemp[0]),
             apparentTemp: Math.round(weatherData.currentApparentTemp),
             currentTemp: Math.round(weatherData.currentTemp),
             weatherCode: weatherData.weatherCode[0],
-            isDayCode: weatherData.isDay,
+            isDay: weatherData.isDay,
         };
+
+        const theme = setTheme(currentWeatherData.weatherCode, currentWeatherData.isDay);
+        const weatherCards = createWeatherCards(weatherData, theme);
         return (
-            <div className="app-main-content">
-                <h2>Weather App</h2>
-                <CurrentDayWeatherBanner
-                    unit={weatherData.units.temperature}
-                    minTemp={currentWeatherData.minTemp}
-                    apparentTemp={currentWeatherData.apparentTemp}
-                    currentTemp={currentWeatherData.currentTemp}
-                    weatherCode={currentWeatherData.weatherCode}
-                    isDay={currentWeatherData.isDayCode}
-                />
-                <div className="weather-card-container">{weatherCards}</div>
+            <div className={`app-container ${theme}`}>
+                <div className={`app-main-content ${theme}`}>
+                    <h2>Weather App</h2>
+                    <CurrentDayWeatherBanner
+                        unit={weatherData.units.temperature}
+                        minTemp={currentWeatherData.minTemp}
+                        apparentTemp={currentWeatherData.apparentTemp}
+                        currentTemp={currentWeatherData.currentTemp}
+                        weatherCode={currentWeatherData.weatherCode}
+                        isDay={currentWeatherData.isDay}
+                    />
+                    <div className="weather-card-container">{weatherCards}</div>
+                </div>
             </div>
         );
     }
 }
-function createWeatherCards(_weatherData: IWeatherData) {
+function createWeatherCards(_weatherData: IWeatherData, theme: string) {
     const weekday = [];
     let _weatherCards = [];
     const DAYSOFTHEWEEK: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -84,8 +109,51 @@ function createWeatherCards(_weatherData: IWeatherData) {
             weatherCode: _weatherData.weatherCode[i],
         };
         _weatherCards.push(
-            <WeatherCard key={weekday[i]} weatherData={data} weekday={weekday[i]} />,
+            <WeatherCard key={weekday[i]} weatherData={data} weekday={weekday[i]} theme={theme} />,
         );
     }
     return _weatherCards;
+}
+
+function setTheme(_weatherCode: number, _isDay: boolean) {
+    switch (_weatherCode) {
+        case WEATHERCODES.CLEAR_SKY:
+        case WEATHERCODES.MAINLY_CLEAR:
+            return _isDay ? "clear-sky-theme" : "night-theme";
+
+        case WEATHERCODES.PARTLY_CLOUDY:
+            return _isDay ? "clear-sky-theme" : "night-theme";
+
+        case WEATHERCODES.OVERCAST:
+            return "grey-sky-theme";
+
+        case WEATHERCODES.FOG:
+        case WEATHERCODES.DEPOSITING_RIME_FOG:
+            return "fog-theme";
+
+        case WEATHERCODES.DRIZZLE_LIGHT:
+        case WEATHERCODES.DRIZZLE_MODERATE:
+        case WEATHERCODES.DRIZZLE_DENSE:
+        case WEATHERCODES.RAIN_SLIGHT:
+        case WEATHERCODES.RAIN_MODERATE:
+        case WEATHERCODES.RAIN_HEAVY:
+        case WEATHERCODES.FREEZING_DRIZZLE_LIGHT:
+        case WEATHERCODES.FREEZING_DRIZZLE_DENSE:
+        case WEATHERCODES.FREEZING_RAIN_LIGHT:
+        case WEATHERCODES.FREEZING_RAIN_HEAVY:
+        case WEATHERCODES.RAIN_SHOWERS_MODERATE:
+        case WEATHERCODES.RAIN_SHOWERS_VIOLENT:
+            return "grey-sky-theme";
+
+        case WEATHERCODES.SNOW_FALL_SLIGHT:
+        case WEATHERCODES.SNOW_FALL_MODERATE:
+        case WEATHERCODES.SNOW_FALL_HEAVY:
+        case WEATHERCODES.SNOW_GRAINS:
+            return "snow-theme";
+
+        case WEATHERCODES.THUNDERSTORM:
+        case WEATHERCODES.THUNDERSTORM_LIGHT_HAIL:
+        case WEATHERCODES.THUNDERSTORM_HEAVY_HAIL:
+            return "thunderous-theme";
+    }
 }
