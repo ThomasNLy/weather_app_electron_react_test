@@ -19,7 +19,7 @@ interface IWeatherBannerProps {
     weatherCode: number;
     isDay: boolean;
 }
-export function CurrentDayWeatherBanner({
+export default function CurrentDayWeatherBanner({
     unit,
     minTemp,
     apparentTemp,

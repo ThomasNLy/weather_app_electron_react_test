@@ -1,11 +1,12 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { FC, Fragment, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 
 import WeatherCard from "./Components/WeatherCard";
-import { CurrentDayWeatherBanner } from "./Components/CurrentDayWeatherBanner";
+import CurrentDayWeatherBanner from "./Components/CurrentDayWeatherBanner";
+import PrecipitationCard from "./Components/PrecipitationCard";
 import "./app.css";
 import { IAPIResponse, IWeatherData } from "./typings";
-import { WEATHERCODES } from "./utilities";
+import { WEATHERCODES, ISOFormatTimeZoneOffset } from "./utilities";
 import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
 const root = createRoot(document.body);
 root.render(<App />);
@@ -60,9 +61,10 @@ function App() {
 
         const theme = setTheme(currentWeatherData.weatherCode, currentWeatherData.isDay);
         const weatherCards = createWeatherCards(weatherData, theme);
+        const precipitationCards = createPrecipitationCards(weatherData, theme);
         return (
             <div className={`app-container ${theme}`}>
-                <div className={`app-main-content ${theme}`}>
+                <div className="app-main-content">
                     <h2>Weather App</h2>
                     <CurrentDayWeatherBanner
                         unit={weatherData.units.temperature}
@@ -73,6 +75,14 @@ function App() {
                         isDay={currentWeatherData.isDay}
                     />
                     <div className="weather-card-container">{weatherCards}</div>
+                    <div>
+                        <h1 className="content-header">Precipitation</h1>
+                        <div
+                            className={`precipitation-card-container precipitation-card-container-${theme}`}
+                        >
+                            {precipitationCards}
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -83,16 +93,12 @@ function createWeatherCards(_weatherData: IWeatherData, theme: string) {
     let _weatherCards = [];
     const DAYSOFTHEWEEK: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    let UTCTimeZoneOffset: number = Math.trunc(_weatherData.utcOffSetSeconds / 3600);
-
-    let integerSign: string = UTCTimeZoneOffset < 0 ? "-" : "+";
-    let formattedHour: string =
-        UTCTimeZoneOffset < 10
-            ? `0${Math.abs(UTCTimeZoneOffset)}`
-            : `${Math.abs(UTCTimeZoneOffset)}`;
+    let UTCTimeZoneOffset: string = ISOFormatTimeZoneOffset(
+        Math.trunc(_weatherData.utcOffSetSeconds / 3600),
+    );
 
     for (let i = 0; i < _weatherData.forecastDays.length; i++) {
-        let ISOFormat = `${_weatherData.forecastDays[i]}T00:00:00${integerSign}${formattedHour}:00`;
+        let ISOFormat = `${_weatherData.forecastDays[i]}T00:00:00${UTCTimeZoneOffset}`;
         let day = new Date(ISOFormat);
 
         let weekdayName = i == 0 ? "Today" : DAYSOFTHEWEEK[day.getDay()];
@@ -113,6 +119,36 @@ function createWeatherCards(_weatherData: IWeatherData, theme: string) {
         );
     }
     return _weatherCards;
+}
+
+function createPrecipitationCards(_weatherData: IWeatherData, theme: string) {
+    const weekday = [];
+    let _precipitationCards = [];
+    const DAYSOFTHEWEEK: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    let UTCTimeZoneOffset: string = ISOFormatTimeZoneOffset(
+        Math.trunc(_weatherData.utcOffSetSeconds / 3600),
+    );
+
+    for (let i = 0; i < _weatherData.forecastDays.length; i++) {
+        let ISOFormat = `${_weatherData.forecastDays[i]}T00:00:00${UTCTimeZoneOffset}`;
+        let day = new Date(ISOFormat);
+
+        let weekdayName = i == 0 ? "Today" : DAYSOFTHEWEEK[day.getDay()];
+
+        weekday.push(weekdayName);
+    }
+    for (let i = 0; i < _weatherData.dailyMaxTemp.length; i++) {
+        let precipitationChance: number = Math.round(_weatherData.precipitationChance[i]);
+        let data = {
+            unit: _weatherData.units.precipitation,
+            precipitationChance: precipitationChance,
+        };
+        _precipitationCards.push(
+            <PrecipitationCard key={weekday[i]} weekday={weekday[i]} data={data} theme={theme} />,
+        );
+    }
+    return _precipitationCards;
 }
 
 function setTheme(_weatherCode: number, _isDay: boolean) {

@@ -1,0 +1,15 @@
+.precipitation-card {
+    display: grid;
+    grid-template-columns: 50% 1fr 1fr;
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.precipitation-icon {
+    justify-self: center;
+    /* width: 32px;
+    height: 32px; */
+}
+.precipitation-text {
+    text-align: right;
+}

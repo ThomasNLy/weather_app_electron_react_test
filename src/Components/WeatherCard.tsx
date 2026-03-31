@@ -36,7 +36,7 @@ export default function WeatherCard({ weatherData, weekday, theme }: IWeatherCar
                     <p className="temp-text">{`${weatherData.dailyMinTemp}${weatherData.unit}`}</p>
                 </div>
             </div>
-            <h2 className="weekday">{weekday}</h2>
+            <h2 className="weekday-text">{weekday}</h2>
         </div>
     );
 }
@@ -70,6 +70,7 @@ function weatherStatusIcon(_weatherCode: number) {
         case WEATHERCODES.FREEZING_DRIZZLE_DENSE:
         case WEATHERCODES.FREEZING_RAIN_LIGHT:
         case WEATHERCODES.FREEZING_RAIN_HEAVY:
+        case WEATHERCODES.RAIN_SHOWERS_SLIGHT:
         case WEATHERCODES.RAIN_SHOWERS_MODERATE:
         case WEATHERCODES.RAIN_SHOWERS_VIOLENT:
             return rainIcon;

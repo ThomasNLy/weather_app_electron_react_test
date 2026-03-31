@@ -28,3 +28,19 @@ export const WEATHERCODES = Object.freeze({
     THUNDERSTORM_LIGHT_HAIL: 96,
     THUNDERSTORM_HEAVY_HAIL: 99,
 });
+
+/**
+ *
+ * @param UTCHourOffset number repsenting the UTC offset in hours e.g. JST is 9, EST is -4
+ * @returns the time formatted as a string in ISO format
+ * @example +9:00 for JST time
+ *
+ */
+export function ISOFormatTimeZoneOffset(UTCHourOffset: number): string {
+    let integerSign: string = UTCHourOffset < 0 ? "-" : "+";
+    let formattedHour: string =
+        UTCHourOffset < 10
+            ? `${integerSign}0${Math.abs(UTCHourOffset)}:00`
+            : `${integerSign}${Math.abs(UTCHourOffset)}:00`;
+    return formattedHour;
+}

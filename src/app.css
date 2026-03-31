@@ -5,14 +5,18 @@
     margin-top: 25vh;
 }
 .app-container {
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
 }
 .app-main-content {
     display: flex;
     flex-direction: column;
     row-gap: 2em;
     /* height: 100vh; */
+}
+.content-header {
+    margin-left: 10%;
+    color: white;
 }
 .weather-card-container {
     margin-left: auto;
@@ -23,7 +27,36 @@
     grid-auto-flow: column;
     overflow-x: auto;
     grid-auto-columns: 20%;
-    column-gap: 1px;
+    column-gap: 0.25%;
+}
+.precipitation-card-container {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 1%;
+    padding-top: 2em;
+    display: grid;
+    grid-template-columns: auto;
+    row-gap: 0.5em;
+}
+
+.precipitation-card-container-clear-sky-theme {
+    background-color: #ededed;
+}
+.precipitation-card-container-grey-sky-theme {
+    background-color: #c0c0c0;
+}
+.precipitation-card-container-snow-theme {
+    background-color: #c0c0c0;
+}
+.precipitation-card-container-night-theme {
+    background-color: #d9d9d9;
+}
+.precipitation-card-container-thunderous-theme {
+    background-color: #5f86ce;
+}
+.precipitation-card-container-fog-theme {
+    background-color: #406d7e;
 }
 
 .clear-sky-theme {
