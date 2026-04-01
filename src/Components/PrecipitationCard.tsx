@@ -6,11 +6,10 @@ interface IPrecipitationCardProps {
         unit: string;
         precipitationChance: number;
     };
-    theme: string;
 }
-export default function PrecipitationCard({ weekday, data, theme }: IPrecipitationCardProps) {
+export default function PrecipitationCard({ weekday, data }: IPrecipitationCardProps) {
     return (
-        <div className={`precipitation-card precipitation-card-{theme}`}>
+        <div className="precipitation-card">
             <h2>{weekday}</h2>
             <img className="precipitation-icon" src={precipitationIcon} alt="precipitation icon" />
             <p className="precipitation-text">{`${data.precipitationChance}${data.unit}`}</p>

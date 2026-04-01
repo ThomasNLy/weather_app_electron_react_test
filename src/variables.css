@@ -1,0 +1,22 @@
+:root {
+    --grey-colour: #c0c0c0;
+
+    /* cloudy or rainy days colours */
+    --cement-grey-colour: #8e9094;
+
+    /*  sunny days colours*/
+    --pale-blue-colour: #aabee3;
+    --light-grey-colour: #d9d9d9;
+    --off-white-colour: #ededed;
+
+    /* snow or night colour */
+    --grey-blue-colour: #46536c;
+
+    /* thunderstorm day colours */
+    --thunderous-blue-colour: #0041b9;
+    --thunderous-blue-clour2: #5f86ce;
+
+    /* Ateez golden hour pt4 colours for fog */
+    --dark-grey-blue-colour: #154558;
+    --grey-blue-colour: #406d7e;
+}

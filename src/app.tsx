@@ -121,7 +121,7 @@ function createWeatherCards(_weatherData: IWeatherData, theme: string) {
     return _weatherCards;
 }
 
-function createPrecipitationCards(_weatherData: IWeatherData, theme: string) {
+function createPrecipitationCards(_weatherData: IWeatherData) {
     const weekday = [];
     let _precipitationCards = [];
     const DAYSOFTHEWEEK: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -145,7 +145,7 @@ function createPrecipitationCards(_weatherData: IWeatherData, theme: string) {
             precipitationChance: precipitationChance,
         };
         _precipitationCards.push(
-            <PrecipitationCard key={weekday[i]} weekday={weekday[i]} data={data} theme={theme} />,
+            <PrecipitationCard key={weekday[i]} weekday={weekday[i]} data={data} />,
         );
     }
     return _precipitationCards;

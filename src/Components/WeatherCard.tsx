@@ -33,8 +33,8 @@ export default function WeatherCard({ weatherData, weekday, theme }: IWeatherCar
             <div className="weather-card-data-container">
                 <img src={weatherStatusIcon(weatherData.weatherCode)} alt="" />
                 <div className="weather-card-data-temp-container">
-                    <p className="temp-text">{`${weatherData.dailyMaxTemp}${weatherData.unit}`} </p>
-                    <p className="temp-text">{`${weatherData.dailyMinTemp}${weatherData.unit}`}</p>
+                    <p className="temp-text">{`${weatherData.dailyMaxTemp}°`} </p>
+                    <p className="temp-text">{`${weatherData.dailyMinTemp}°`}</p>
                 </div>
             </div>
             <h2 className="weekday-text">{weekday}</h2>

@@ -7,6 +7,7 @@
 }
 .weather-card-fog-theme {
     background-color: #406d7e;
+    color: white;
 }
 .weather-card-grey-sky-theme {
     background-color: #c0c0c0;
@@ -20,7 +21,7 @@
 /* --------------------------- */
 
 .weather-card {
-    width: 95%;
+    width: 97%;
     border-radius: 2%;
     display: grid;
     grid-template-rows: auto auto;
@@ -42,5 +43,6 @@
     margin-block: 0;
     font-size: 1.2rem;
     text-align: right;
-    margin-right: 0.8em;
+    /* margin-right: 0.8em; */
+    padding-right: 0.2em;
 }
