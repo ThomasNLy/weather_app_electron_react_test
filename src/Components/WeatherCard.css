@@ -1,22 +1,23 @@
+@import url("../variables.css");
 /* Themes based on current weather of "Today" forecast */
 .weather-card-clear-sky-theme {
-    background-color: #ededed;
+    background-color: var(--off-white-colour);
 }
 .weather-card-night-theme {
-    background-color: #dad9d9;
+    background-color: var(--space-grey-colour);
 }
 .weather-card-fog-theme {
-    background-color: #406d7e;
+    background-color: var(--grey-blue-colour);
     color: white;
 }
 .weather-card-grey-sky-theme {
-    background-color: #c0c0c0;
+    background-color: var(--grey-colour);
 }
 .weather-card-snow-theme {
-    background-color: #c0c0c0;
+    background-color: var(--grey-colour);
 }
 .weather-card-thunderous-theme {
-    background-color: #5f86ce;
+    background-color: var(--thunderous-blue-colour2);
 }
 /* --------------------------- */
 

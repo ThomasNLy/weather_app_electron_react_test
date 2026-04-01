@@ -48,10 +48,10 @@
     background-color: var(--grey-colour);
 }
 .precipitation-card-container-snow-theme {
-    background-color: var(--grey-colour);
+    background-color: var(--space-grey-colour);
 }
 .precipitation-card-container-night-theme {
-    background-color: var(--grey-colour);
+    background-color: var(--space-grey-colour);
 }
 .precipitation-card-container-thunderous-theme {
     background-color: var(--thunderous-blue-colour2);
