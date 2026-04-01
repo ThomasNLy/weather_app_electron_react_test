@@ -1,6 +1,7 @@
 import React from "react";
 import "./WeatherCard.css";
 import { WEATHERCODES } from "../utilities";
+import partlyCloudyDayIcon from "../assets/icons_96/partly_cloudy_96.png";
 import cloudyIcon from "../assets/icons_96/cloudy_96.png";
 import rainIcon from "../assets/icons_96/rain_96.png";
 import snowIcon from "../assets/icons_96/snowflake5_96.png";
@@ -45,13 +46,11 @@ export default function WeatherCard({ weatherData, weekday, theme }: IWeatherCar
 function weatherStatusIcon(_weatherCode: number) {
     switch (_weatherCode) {
         case WEATHERCODES.CLEAR_SKY:
-            return thunderIcon;
-
         case WEATHERCODES.MAINLY_CLEAR:
             return sunIcon;
 
         case WEATHERCODES.PARTLY_CLOUDY:
-            return cloudyIcon;
+            return partlyCloudyDayIcon;
 
         case WEATHERCODES.OVERCAST:
             return cloudyIcon;
@@ -63,13 +62,14 @@ function weatherStatusIcon(_weatherCode: number) {
         case WEATHERCODES.DRIZZLE_LIGHT:
         case WEATHERCODES.DRIZZLE_MODERATE:
         case WEATHERCODES.DRIZZLE_DENSE:
+        case WEATHERCODES.FREEZING_DRIZZLE_LIGHT:
+        case WEATHERCODES.FREEZING_DRIZZLE_DENSE:
         case WEATHERCODES.RAIN_SLIGHT:
         case WEATHERCODES.RAIN_MODERATE:
         case WEATHERCODES.RAIN_HEAVY:
-        case WEATHERCODES.FREEZING_DRIZZLE_LIGHT:
-        case WEATHERCODES.FREEZING_DRIZZLE_DENSE:
         case WEATHERCODES.FREEZING_RAIN_LIGHT:
         case WEATHERCODES.FREEZING_RAIN_HEAVY:
+
         case WEATHERCODES.RAIN_SHOWERS_SLIGHT:
         case WEATHERCODES.RAIN_SHOWERS_MODERATE:
         case WEATHERCODES.RAIN_SHOWERS_VIOLENT:
@@ -79,6 +79,8 @@ function weatherStatusIcon(_weatherCode: number) {
         case WEATHERCODES.SNOW_FALL_MODERATE:
         case WEATHERCODES.SNOW_FALL_HEAVY:
         case WEATHERCODES.SNOW_GRAINS:
+        case WEATHERCODES.SNOW_SHOWERS_SLIGHT:
+        case WEATHERCODES.SNOW_SHOWERS_SLIGHT:
             return snowIcon;
 
         case WEATHERCODES.THUNDERSTORM:

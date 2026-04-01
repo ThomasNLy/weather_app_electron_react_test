@@ -102,6 +102,7 @@ function weatherStatusIcon(_weatherCode: number, _isDay: boolean) {
         case WEATHERCODES.FREEZING_DRIZZLE_DENSE:
         case WEATHERCODES.FREEZING_RAIN_LIGHT:
         case WEATHERCODES.FREEZING_RAIN_HEAVY:
+        case WEATHERCODES.RAIN_SHOWERS_SLIGHT:
         case WEATHERCODES.RAIN_SHOWERS_MODERATE:
         case WEATHERCODES.RAIN_SHOWERS_VIOLENT:
             return {
