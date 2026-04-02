@@ -19,16 +19,31 @@
     margin-left: 10%;
     color: white;
 }
-.weather-card-container {
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 0.3%;
-    width: 80%;
-    display: grid;
-    grid-auto-flow: column;
-    overflow-x: auto;
-    grid-auto-columns: 20%;
-    column-gap: 0.25%;
+@media screen and (max-width: 900px) {
+    .weather-card-container {
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 0.3%;
+        width: 80%;
+        display: grid;
+        grid-auto-flow: column;
+        overflow-x: auto;
+        grid-auto-columns: 33%;
+        column-gap: 0.5%;
+    }
+}
+@media screen and (min-width: 900px) {
+    .weather-card-container {
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 0.3%;
+        width: 80%;
+        display: grid;
+        grid-auto-flow: column;
+        overflow-x: auto;
+        grid-auto-columns: 20%;
+        column-gap: 0.25%;
+    }
 }
 .precipitation-card-container {
     width: 80%;
@@ -38,7 +53,7 @@
     padding-top: 2em;
     display: grid;
     grid-template-columns: auto;
-    row-gap: 0.5em;
+    row-gap: 0.3em;
 }
 
 .precipitation-card-container-clear-sky-theme {

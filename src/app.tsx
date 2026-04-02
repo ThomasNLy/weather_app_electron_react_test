@@ -59,9 +59,9 @@ function App() {
             isDay: weatherData.isDay,
         };
 
-        const theme = setTheme(currentWeatherData.weatherCode, currentWeatherData.isDay);
+        const theme: string = setTheme(currentWeatherData.weatherCode, currentWeatherData.isDay);
         const weatherCards = createWeatherCards(weatherData, theme);
-        const precipitationCards = createPrecipitationCards(weatherData, theme);
+        const precipitationCards = createPrecipitationCards(weatherData);
         return (
             <div className={`app-container ${theme}`}>
                 <div className="app-main-content">
@@ -151,7 +151,7 @@ function createPrecipitationCards(_weatherData: IWeatherData) {
     return _precipitationCards;
 }
 
-function setTheme(_weatherCode: number, _isDay: boolean) {
+function setTheme(_weatherCode: number, _isDay: boolean): string {
     switch (_weatherCode) {
         case WEATHERCODES.CLEAR_SKY:
         case WEATHERCODES.MAINLY_CLEAR:
@@ -191,5 +191,7 @@ function setTheme(_weatherCode: number, _isDay: boolean) {
         case WEATHERCODES.THUNDERSTORM_LIGHT_HAIL:
         case WEATHERCODES.THUNDERSTORM_HEAVY_HAIL:
             return "thunderous-theme";
+        default:
+            return "clear-sky-theme";
     }
 }
