@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useEffect, useState } from "react";
+import React, { FC, Fragment, useEffect, useState, useRef, RefObject } from "react";
 import { createRoot } from "react-dom/client";
 
 import WeatherCard from "./Components/WeatherCard";
@@ -12,9 +12,13 @@ const root = createRoot(document.body);
 root.render(<App />);
 
 function App() {
+    console.log("Width: " + window.innerWidth);
+    console.log("Height: " + window.innerHeight);
+
     const [weatherData, setWeatherData] = useState<IWeatherData | null>(null);
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // fake loading screen for UX
+    const weatherCardContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         const apiCall: Promise<IAPIResponse> = window.mainProcess.getWeatherData();
         const delayTimer: Promise<any> = new Promise((resolve) => setTimeout(resolve, 1200));
@@ -75,7 +79,35 @@ function App() {
                         weatherCode={currentWeatherData.weatherCode}
                         isDay={currentWeatherData.isDay}
                     />
-                    <div className="weather-card-container">{weatherCards}</div>
+                    <div className="weekly-forecast-content">
+                        <button
+                            className="weekly-forecast-left-scroll-button"
+                            type="button"
+                            onClick={() =>
+                                handleWeatherCardScroll(
+                                    false,
+                                    weatherCardContainerRef as RefObject<HTMLDivElement>,
+                                )
+                            }
+                        >
+                            left
+                        </button>
+                        <button
+                            className="weekly-forecast-right-scroll-button"
+                            type="button"
+                            onClick={() =>
+                                handleWeatherCardScroll(
+                                    true,
+                                    weatherCardContainerRef as RefObject<HTMLDivElement>,
+                                )
+                            }
+                        >
+                            right
+                        </button>
+                        <div ref={weatherCardContainerRef} className="weather-card-container">
+                            {weatherCards}
+                        </div>
+                    </div>
                     <div>
                         <h1 className="content-header">Precipitation</h1>
                         <div
@@ -194,5 +226,22 @@ function setTheme(_weatherCode: number, _isDay: boolean): string {
             return "thunderous-theme";
         default:
             return "clear-sky-theme";
+    }
+}
+
+function handleWeatherCardScroll(scrollRight: boolean, weatherCardsRef: RefObject<HTMLDivElement>) {
+    const scrollLength = weatherCardsRef.current.scrollWidth;
+    const currentContainerWidth = weatherCardsRef.current.clientWidth;
+    const scrollOffset = (scrollLength - currentContainerWidth) * 0.5;
+    if (scrollRight) {
+        weatherCardsRef.current.scrollTo({
+            left: weatherCardsRef.current.scrollLeft + scrollOffset,
+            behavior: "smooth",
+        });
+    } else {
+        weatherCardsRef.current.scrollTo({
+            left: weatherCardsRef.current.scrollLeft - scrollOffset,
+            behavior: "smooth",
+        });
     }
 }

@@ -21,3 +21,16 @@
     font-size: 1.5rem;
     margin-block: 0em;
 }
+
+@media screen and (min-width: 900px) {
+    .precipitation-card {
+        width: 50%;
+        grid-template-columns: 60% 1fr 1fr;
+    }
+}
+@media screen and (min-width: 1200px) {
+    .precipitation-card {
+        width: 40%;
+        grid-template-columns: 60% 1fr 1fr;
+    }
+}

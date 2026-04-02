@@ -126,5 +126,11 @@ function weatherStatusIcon(_weatherCode: number, _isDay: boolean) {
                 icon: thunderIcon,
                 status: "Thunderous",
             };
+
+        default:
+            return {
+                icon: sunIcon,
+                status: "unknown",
+            };
     }
 }
