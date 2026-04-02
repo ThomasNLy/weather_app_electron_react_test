@@ -38,12 +38,33 @@
 }
 .weather-card-data-temp-container {
     display: grid;
-    grid-template-rows: auto auto;
+    grid-template-rows: max-content max-content;
+    row-gap: 0.7em;
 }
 .temp-text {
     margin-block: 0;
     font-size: 1.2rem;
     text-align: right;
-    /* margin-right: 0.8em; */
+
     padding-right: 0.2em;
+}
+
+@media screen and (min-width: 900px) {
+    .weather-card {
+        width: 97%;
+        border-radius: 2%;
+        display: grid;
+        grid-template-rows: auto auto;
+        aspect-ratio: 1 /0.8;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .temp-text {
+        font-size: 1.25rem;
+    }
+    .weather-card-data-container {
+        padding-left: 0.6em;
+        padding-right: 0.6em;
+    }
 }

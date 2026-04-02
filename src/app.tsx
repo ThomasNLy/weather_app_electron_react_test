@@ -12,7 +12,7 @@ const root = createRoot(document.body);
 root.render(<App />);
 
 function App() {
-    const [weatherData, setWeatherData] = useState<IWeatherData>(null);
+    const [weatherData, setWeatherData] = useState<IWeatherData | null>(null);
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // fake loading screen for UX
     useEffect(() => {
@@ -23,11 +23,12 @@ function App() {
         used to ensure that the data is loaded in when retrieving data from 
         the weather api and the fake delay is full finished as well for the loading
         screen in case the data loaded in too quickly for better UX 
-        uses array destucturing to grab a specific promise's resolved result
-        from the array passed in
+        takes in an array of values returned form resolved promise and grabspecific promise's resolved result
+        from the array passed in, order matches order of items in array of promises
         */
         Promise.all(arrayOfPromiseToResolve)
-            .then(([apiData, delayTimer]: [IAPIResponse, any]) => {
+            .then((values: any[]) => {
+                const apiData: IAPIResponse = values[0];
                 if (apiData.status) {
                     setWeatherData(apiData.weatherData);
                 }
@@ -52,22 +53,22 @@ function App() {
         return <h1>Error retrieving weather data. Try Again later</h1>;
     } else if (connectionStatus) {
         let currentWeatherData = {
-            minTemp: Math.round(weatherData.dailyMinTemp[0]),
-            apparentTemp: Math.round(weatherData.currentApparentTemp),
-            currentTemp: Math.round(weatherData.currentTemp),
-            weatherCode: weatherData.weatherCode[0],
-            isDay: weatherData.isDay,
+            minTemp: Math.round(weatherData!.dailyMinTemp[0]),
+            apparentTemp: Math.round(weatherData!.currentApparentTemp),
+            currentTemp: Math.round(weatherData!.currentTemp),
+            weatherCode: weatherData!.weatherCode[0],
+            isDay: weatherData!.isDay,
         };
 
         const theme: string = setTheme(currentWeatherData.weatherCode, currentWeatherData.isDay);
-        const weatherCards = createWeatherCards(weatherData, theme);
-        const precipitationCards = createPrecipitationCards(weatherData);
+        const weatherCards = createWeatherCards(weatherData!, theme);
+        const precipitationCards = createPrecipitationCards(weatherData!);
         return (
             <div className={`app-container ${theme}`}>
                 <div className="app-main-content">
                     <h2>Weather App</h2>
                     <CurrentDayWeatherBanner
-                        unit={weatherData.units.temperature}
+                        unit={weatherData!.units.temperature}
                         minTemp={currentWeatherData.minTemp}
                         apparentTemp={currentWeatherData.apparentTemp}
                         currentTemp={currentWeatherData.currentTemp}

@@ -89,6 +89,6 @@ export interface IWeatherData {
  */
 export interface IAPIResponse {
     status: boolean;
-    weatherData: IWeatherData;
+    weatherData: IWeatherData | null;
     message: string;
 }
