@@ -8,6 +8,8 @@ import "./app.css";
 import { IAPIResponse, IWeatherData } from "./typings";
 import { WEATHERCODES, ISOFormatTimeZoneOffset } from "./utilities";
 import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
+import buttonLeftIcon from "./assets/button_left.svg";
+import buttonRightIcon from "./assets/button_right.svg";
 const root = createRoot(document.body);
 root.render(<App />);
 
@@ -90,7 +92,11 @@ function App() {
                                 )
                             }
                         >
-                            left
+                            <img
+                                className="button-svg-icon"
+                                src={buttonLeftIcon}
+                                alt="left button"
+                            />
                         </button>
                         <button
                             className="weekly-forecast-right-scroll-button"
@@ -102,9 +108,16 @@ function App() {
                                 )
                             }
                         >
-                            right
+                            <img
+                                className="button-svg-icon"
+                                src={buttonRightIcon}
+                                alt="right button"
+                            />
                         </button>
-                        <div ref={weatherCardContainerRef} className="weather-card-container">
+                        <div
+                            ref={weatherCardContainerRef}
+                            className={`weather-card-container weather-card-container-${theme}`}
+                        >
                             {weatherCards}
                         </div>
                     </div>
