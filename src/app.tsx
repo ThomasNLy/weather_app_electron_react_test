@@ -62,7 +62,7 @@ function App() {
             minTemp: Math.round(weatherData!.dailyMinTemp[0]),
             apparentTemp: Math.round(weatherData!.currentApparentTemp),
             currentTemp: Math.round(weatherData!.currentTemp),
-            weatherCode: weatherData!.weatherCode[0],
+            weatherCode: weatherData!.currentWeatherCode,
             isDay: weatherData!.isDay,
         };
 

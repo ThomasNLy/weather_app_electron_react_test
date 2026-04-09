@@ -38,6 +38,7 @@ declare global {
  * @property {{temperature: string, percipitation: string}} units - units used for weather data
  * @property {number} currentApparentTemp - the current apparent temperature, "feels like"
  * @property {number} currentTemp - the current temperature
+ * @property {number} currentWeatherCode - the current weather code
  * @property {string[]} forecastDays - dates of weather forecast
  * @property {number[]} weatherCode - weather codes for weather status
  * @property {number[]} dailyMaxTemp - array of daily max temperature
@@ -55,6 +56,7 @@ export interface IWeatherData {
     };
     currentApparentTemp: number;
     currentTemp: number;
+    currentWeatherCode: number;
     forecastDays: string[];
     weatherCode: number[];
     dailyMaxTemp: number[];

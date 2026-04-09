@@ -101,6 +101,7 @@ async function fetchWeather() {
                 },
                 currentApparentTemp: data.current.apparent_temperature,
                 currentTemp: data.current.temperature_2m,
+                currentWeatherCode: data.current.weather_code,
                 forecastDays: data.daily.time,
                 weatherCode: data.daily.weather_code,
                 dailyMaxTemp: data.daily.temperature_2m_max,
