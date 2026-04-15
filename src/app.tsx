@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useEffect, useState, useRef, RefObject } from "react";
+import React, { FC, Fragment, useEffect, useState, useRef, useCallback, RefObject } from "react";
 import { createRoot } from "react-dom/client";
 
 import WeatherCard from "./Components/WeatherCard";
@@ -6,13 +6,18 @@ import CurrentDayWeatherBanner from "./Components/CurrentDayWeatherBanner";
 import PrecipitationCard from "./Components/PrecipitationCard";
 import Menu from "./Components/Menu";
 import "./app.css";
-import { IGeoAPIResponse, IWeatherAPIResponse, IWeatherData } from "./typings";
+import { IGeoAPIResponse, ILocationData, IWeatherAPIResponse, IWeatherData } from "./typings";
 import { WEATHERCODES, ISOFormatTimeZoneOffset } from "./utilities";
 import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
 import buttonLeftIcon from "./assets/button_left.svg";
 import buttonRightIcon from "./assets/button_right.svg";
 const root = createRoot(document.body);
 root.render(<App />);
+
+interface IGeoCoordinates {
+    latitide: number;
+    longitude: number;
+}
 
 function App() {
     console.log("Width: " + window.innerWidth);
@@ -21,10 +26,13 @@ function App() {
     const [weatherData, setWeatherData] = useState<IWeatherData | null>(null);
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // fake loading screen for UX
-    const weatherCardContainerRef = useRef<HTMLDivElement>(null);
+    let temp: IGeoCoordinates = { latitide: 0, longitude: 0 };
+
+    const [currentCityCoordinates, setCurrentCityCoordinates] = useState<IGeoCoordinates>(temp);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
-    getLocationData("Tokyo");
+
+    const weatherCardContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         const apiCall: Promise<IWeatherAPIResponse> = window.mainProcess.getWeatherData();
 
@@ -53,6 +61,17 @@ function App() {
             });
     }, []);
 
+    const handleSetCurrentCityFunction = useCallback(
+        async (latitude: number, longitude: number) => {
+            let coordinates: IGeoCoordinates = {
+                latitide: latitude,
+                longitude: longitude,
+            };
+            setCurrentCityCoordinates(coordinates);
+        },
+        [],
+    );
+    console.log(currentCityCoordinates);
     if (isLoading) {
         return (
             <div className="loading-screen">
@@ -80,6 +99,7 @@ function App() {
                     <Menu
                         handleCloseMenuFunction={setMenuOpen}
                         handleSearchCityFunction={getLocationData}
+                        handleSetCurrentCityFunction={handleSetCurrentCityFunction}
                     />
                 ) : (
                     <button onClick={() => setMenuOpen(true)}>open menu</button>
@@ -277,12 +297,15 @@ async function getLocationData(cityName: string) {
     try {
         const apiCall: IGeoAPIResponse = await window.mainProcess.getLocationData(cityName);
         if (apiCall != null) {
-            const locationData = await apiCall.locations;
-            console.log(locationData);
+            const data = await apiCall.locations;
+
+            return data;
         } else {
             console.log("city doesn't exist");
+            return null;
         }
     } catch (error) {
         console.log("Node js Error with IPC main process probably crashed", error);
+        return null;
     }
 }

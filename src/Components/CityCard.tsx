@@ -3,17 +3,25 @@ import { ILocationData } from "../typings";
 import "./CityCard.css";
 interface ICityCardProps {
     cityName: string;
+    adminRegion: string;
     countryName: string;
     latitude: number;
     longitude: number;
+    setCurrentCityFunction: (latitude: number, longitude: number) => void;
 }
 
-export default function CityCard({ cityName, countryName, longitude, latitude }: ICityCardProps) {
-    let test = (a, b) => {};
+export default function CityCard({
+    cityName,
+    adminRegion,
+    countryName,
+    latitude,
+    longitude,
+    setCurrentCityFunction,
+}: ICityCardProps) {
     return (
-        <div className="city-card">
-            <h1>City Name</h1>
-            <h2>Country Name</h2>
+        <div className="city-card" onClick={() => setCurrentCityFunction(latitude, longitude)}>
+            <h1>{cityName}</h1>
+            <p>{`${adminRegion}, ${countryName}`}</p>
         </div>
     );
 }
