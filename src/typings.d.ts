@@ -108,6 +108,7 @@ export interface IGeoAPIResponse {
 }
 export interface ILocationData {
     city: string;
+    adminRegion: string;
     country: string;
     latitude: number;
     longitude: number;
