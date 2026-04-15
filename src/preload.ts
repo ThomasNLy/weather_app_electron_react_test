@@ -4,4 +4,5 @@
 import { contextBridge, ipcRenderer } from "electron";
 contextBridge.exposeInMainWorld("mainProcess", {
     getWeatherData: () => ipcRenderer.invoke("get-weather-data"),
+    getLocationData: (cityName: string) => ipcRenderer.invoke("get-location-data", cityName),
 });

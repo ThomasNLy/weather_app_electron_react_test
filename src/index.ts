@@ -62,20 +62,28 @@ ipcMain.handle("get-weather-data", async () => {
     return await fetchWeather();
 });
 
+ipcMain.handle("get-location-data", async (event, cityName: string) => {
+    //return await fetchGeoLocationData("tokyo");
+    console.log(fetchGeoLocationData(cityName).locations);
+    return await fetchGeoLocationData(cityName);
+});
+
 import path from "path";
 import dotenv from "dotenv";
-import { IWeatherData, IAPIResponse } from "./typings";
+import { IWeatherData, IWeatherAPIResponse, IGeoAPIResponse, ILocationData } from "./typings";
 
-let weatherDataCache: { data: IWeatherData; timeStamp: number } = {
+let weatherDataCache: { data: IWeatherData | null; timeStamp: number } = {
     data: null,
     timeStamp: 0,
 };
 
 const CACHE_DURATION = 30 * 60 * 1000;
 
-const envPath = configureAPIKey();
+const envPath = configureAPIKeys();
 dotenv.config({ path: envPath });
-const apiKey = process.env.WEATHER_API;
+const weatherAPIKey = process.env.WEATHER_API as string;
+const geoAPIKey = process.env.GEO_API as string;
+const geoAPIKeyParameters = process.env.GEO_API_PARAMETERS as string;
 
 async function fetchWeather() {
     try {
@@ -85,7 +93,7 @@ async function fetchWeather() {
         ) {
             console.log("fresh api pull");
             console.log(Date.now() - weatherDataCache.timeStamp);
-            const response = await fetch(apiKey);
+            const response = await fetch(weatherAPIKey);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -112,7 +120,7 @@ async function fetchWeather() {
             };
             weatherDataCache.data = weatherData;
             weatherDataCache.timeStamp = Date.now();
-            let apiResponse: IAPIResponse = {
+            let apiResponse: IWeatherAPIResponse = {
                 status: true,
                 weatherData: weatherData,
                 message: "success, connection made",
@@ -122,7 +130,7 @@ async function fetchWeather() {
         } else {
             console.log("cached weather data");
             console.log(weatherDataCache);
-            let apiResponse: IAPIResponse = {
+            let apiResponse: IWeatherAPIResponse = {
                 status: true,
                 weatherData: weatherDataCache.data,
                 message: "success, connection made",
@@ -131,7 +139,7 @@ async function fetchWeather() {
         }
     } catch (error) {
         console.error("Error fetching data: ", error);
-        let apiResponse: IAPIResponse = {
+        let apiResponse: IWeatherAPIResponse = {
             status: false,
             weatherData: null,
             message: `error retrieving weather data, ${error}`,
@@ -139,8 +147,40 @@ async function fetchWeather() {
         return apiResponse;
     }
 }
+async function fetchGeoLocationData(cityName: string) {
+    try {
+        if (cityName.length > 2) {
+            const configuredGeoAPIKey = `${geoAPIKey}${cityName}${geoAPIKeyParameters}`;
 
-function configureAPIKey() {
+            const response = await fetch(configuredGeoAPIKey);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const geoData = await response.json();
+            const locationData: ILocationData[] = geoData.results.map((data: any) => {
+                let locationData: ILocationData = {
+                    city: data.name,
+                    country: data.country,
+                    longitude: data.longitude,
+                    latitude: data.latitude,
+                };
+
+                return locationData;
+            });
+            let apiResponse: IGeoAPIResponse = {
+                locations: locationData,
+            };
+            return apiResponse;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.log("Error fetching data: ", error);
+        return null;
+    }
+}
+
+function configureAPIKeys() {
     if (!app.isPackaged) {
         return path.join(process.cwd(), ".env");
     } else {
