@@ -1,0 +1,28 @@
+.city-card {
+    background-color: var(--white-colour);
+    border-radius: 1%;
+    border-color: var(--pale-grey-colour);
+    border-width: 2px;
+    border-style: solid;
+    display: grid;
+    align-items: center;
+    justify-items: left;
+    user-select: none;
+    margin-top: -2px;
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+    padding-left: 0.7em;
+}
+.city-card:hover {
+    background-color: rgb(180, 180, 180);
+}
+.city-card h1 {
+    font-size: 20px;
+    font-weight: 400;
+    margin-block: 0;
+}
+.city-card h2 {
+    font-size: 12px;
+    font-weight: 400;
+    margin-block: 0;
+}

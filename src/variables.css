@@ -20,4 +20,9 @@
     /* Ateez golden hour pt4 colours for fog */
     --dark-grey-blue-colour: #154558;
     --grey-blue-colour: #406d7e;
+
+    /* Menu colours */
+    --menu-bg-colour: #e5e5e5;
+    --white-colour: #ffffff;
+    --pale-grey-colour: #c8c8c8;
 }

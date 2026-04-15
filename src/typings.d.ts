@@ -11,11 +11,19 @@ declare global {
      */
     interface IElectronAPI {
         /**
-         * @property {Promise<IAPIResponse>} ```getWeatherData()``` - The promise object returned representing
+         * @property {Promise<IWeatherAPIResponse>} ```getWeatherData()``` - The promise object returned representing
          * api response status and weather data
-         * @return {IAPIResponse} JSON object with weather data and api status
+         * @see {@link IGeoAPIResponse}
+         * @return {IWeatherAPIResponse} JSON object with weather data and api status
          */
-        getWeatherData: () => Promise<IAPIResponse>;
+        getWeatherData: () => Promise<IWeatherAPIResponse>;
+        /**
+         * @property {Promise<IGeoAPIResponse>} ```getLocationData(string)``` - The promise object returned representing
+         * api response an array of location data based on the city name argument passed as a string
+         * @see {@link IGeoAPIResponse}
+         * @return {IGeoAPIResponse} JSON object holding an array of JSON objects with location data
+         */
+        getLocationData: (cityName: string) => Promise<IGeoAPIResponse>;
     }
 
     //merging with built in Window interface with new property added
@@ -89,8 +97,18 @@ export interface IWeatherData {
  * }
  *
  */
-export interface IAPIResponse {
+export interface IWeatherAPIResponse {
     status: boolean;
     weatherData: IWeatherData | null;
     message: string;
+}
+
+export interface IGeoAPIResponse {
+    locations: ILocationData[] | null;
+}
+export interface ILocationData {
+    city: string;
+    country: string;
+    latitude: number;
+    longitude: number;
 }
