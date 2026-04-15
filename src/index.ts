@@ -160,6 +160,7 @@ async function fetchGeoLocationData(cityName: string) {
             const locationData: ILocationData[] = geoData.results.map((data: any) => {
                 let locationData: ILocationData = {
                     city: data.name,
+                    adminRegion: data.admin1,
                     country: data.country,
                     longitude: data.longitude,
                     latitude: data.latitude,
