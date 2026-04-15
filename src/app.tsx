@@ -4,8 +4,9 @@ import { createRoot } from "react-dom/client";
 import WeatherCard from "./Components/WeatherCard";
 import CurrentDayWeatherBanner from "./Components/CurrentDayWeatherBanner";
 import PrecipitationCard from "./Components/PrecipitationCard";
+import Menu from "./Components/Menu";
 import "./app.css";
-import { IAPIResponse, IWeatherData } from "./typings";
+import { IGeoAPIResponse, IWeatherAPIResponse, IWeatherData } from "./typings";
 import { WEATHERCODES, ISOFormatTimeZoneOffset } from "./utilities";
 import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
 import buttonLeftIcon from "./assets/button_left.svg";
@@ -21,8 +22,12 @@ function App() {
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // fake loading screen for UX
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
+
+    const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    getLocationData("Tokyo");
     useEffect(() => {
-        const apiCall: Promise<IAPIResponse> = window.mainProcess.getWeatherData();
+        const apiCall: Promise<IWeatherAPIResponse> = window.mainProcess.getWeatherData();
+
         const delayTimer: Promise<any> = new Promise((resolve) => setTimeout(resolve, 1200));
         const arrayOfPromiseToResolve: Promise<any>[] = [apiCall, delayTimer];
         /*
@@ -34,15 +39,15 @@ function App() {
         */
         Promise.all(arrayOfPromiseToResolve)
             .then((values: any[]) => {
-                const apiData: IAPIResponse = values[0];
+                const apiData: IWeatherAPIResponse = values[0];
                 if (apiData.status) {
                     setWeatherData(apiData.weatherData);
                 }
                 setIsLoading(false);
                 setConnectionStatus(apiData.status);
             })
-            .catch((err) => {
-                console.log("Node js Error with IPC main process probably crashed", err);
+            .catch((error) => {
+                console.log("Node js Error with IPC main process probably crashed", error);
                 setConnectionStatus(false);
                 setIsLoading(false);
             });
@@ -71,6 +76,14 @@ function App() {
         const precipitationCards = createPrecipitationCards(weatherData!);
         return (
             <div className={`app-container ${theme}`}>
+                {menuOpen ? (
+                    <Menu
+                        handleCloseMenuFunction={setMenuOpen}
+                        handleSearchCityFunction={getLocationData}
+                    />
+                ) : (
+                    <button onClick={() => setMenuOpen(true)}>open menu</button>
+                )}
                 <div className="app-main-content">
                     <h2>Weather App</h2>
                     <CurrentDayWeatherBanner
@@ -256,5 +269,20 @@ function handleWeatherCardScroll(scrollRight: boolean, weatherCardsRef: RefObjec
             left: weatherCardsRef.current.scrollLeft - scrollOffset,
             behavior: "smooth",
         });
+    }
+}
+
+//-------------------API FUNCTION CALLS------------------------
+async function getLocationData(cityName: string) {
+    try {
+        const apiCall: IGeoAPIResponse = await window.mainProcess.getLocationData(cityName);
+        if (apiCall != null) {
+            const locationData = await apiCall.locations;
+            console.log(locationData);
+        } else {
+            console.log("city doesn't exist");
+        }
+    } catch (error) {
+        console.log("Node js Error with IPC main process probably crashed", error);
     }
 }
