@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ILocationData } from "../typings";
+import { IGeoCoordinatesData, ILocationData } from "../typings";
 import "./CityCard.css";
 interface ICityCardProps {
     cityName: string;
@@ -7,7 +7,7 @@ interface ICityCardProps {
     countryName: string;
     latitude: number;
     longitude: number;
-    setCurrentCityFunction: (latitude: number, longitude: number) => void;
+    setCurrentCityFunction: (geoData: IGeoCoordinatesData) => void;
 }
 
 export default function CityCard({
@@ -18,20 +18,15 @@ export default function CityCard({
     longitude,
     setCurrentCityFunction,
 }: ICityCardProps) {
+    let geoData: IGeoCoordinatesData = {
+        latitude: latitude,
+        longitude: longitude,
+        cityName: cityName,
+    };
     return (
-        <div className="city-card" onClick={() => setCurrentCityFunction(latitude, longitude)}>
+        <div className="city-card" onClick={() => setCurrentCityFunction(geoData)}>
             <h1>{cityName}</h1>
             <p>{`${adminRegion}, ${countryName}`}</p>
         </div>
     );
-}
-
-/**
- * returns geo data, latitude and longitude to add city and
- * get weather data about it
- */
-function handleOnClick(callBackFunction: (latitude: number, longitude: number) => void) {
-    //some function that
-    // gets passed as prop here from app.tsx to use
-    // the latitude and longitude data
 }

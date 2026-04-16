@@ -58,13 +58,13 @@ app.on("activate", () => {
 // code. You can also put them in separate files and import them here.
 
 // Handle IPC requests from renderer process
-ipcMain.handle("get-weather-data", async () => {
-    return await fetchWeather();
+ipcMain.handle("get-weather-data", async (event, latitude: number, longitude: number) => {
+    return await fetchWeather(latitude, longitude);
 });
 
 ipcMain.handle("get-location-data", async (event, cityName: string) => {
     //return await fetchGeoLocationData("tokyo");
-    console.log(fetchGeoLocationData(cityName).locations);
+
     return await fetchGeoLocationData(cityName);
 });
 
@@ -77,23 +77,36 @@ let weatherDataCache: { data: IWeatherData | null; timeStamp: number } = {
     timeStamp: 0,
 };
 
+let geoCoordinatesCache = {
+    latitude: 0,
+    longitude: 0,
+};
+
 const CACHE_DURATION = 30 * 60 * 1000;
 
 const envPath = configureAPIKeys();
 dotenv.config({ path: envPath });
 const weatherAPIKey = process.env.WEATHER_API as string;
+const weatherAPIKeyLatitudeParameter = process.env.WEATHER_API_LATITUDE_PARAMETER as string;
+const weatherAPIKeyLongitudeParameter = process.env.WEATHER_API_LONGITUDE_PARAMETER as string;
+const weatherAPIKeyForecastParameters = process.env.WEATHER_API_FORECAST_PARAMETERS as string;
 const geoAPIKey = process.env.GEO_API as string;
 const geoAPIKeyParameters = process.env.GEO_API_PARAMETERS as string;
 
-async function fetchWeather() {
+async function fetchWeather(latitude: number, longitude: number) {
     try {
         if (
             weatherDataCache.data == null ||
-            Date.now() - weatherDataCache.timeStamp > CACHE_DURATION
+            Date.now() - weatherDataCache.timeStamp > CACHE_DURATION ||
+            (geoCoordinatesCache.latitude !== latitude &&
+                geoCoordinatesCache.longitude !== longitude)
         ) {
             console.log("fresh api pull");
             console.log(Date.now() - weatherDataCache.timeStamp);
-            const response = await fetch(weatherAPIKey);
+            const configuredWeatherAPIKey: string = `${weatherAPIKey}${weatherAPIKeyLatitudeParameter}${latitude}${weatherAPIKeyLongitudeParameter}${longitude}${weatherAPIKeyForecastParameters}`;
+
+            console.log(configuredWeatherAPIKey);
+            const response = await fetch(configuredWeatherAPIKey);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -118,6 +131,7 @@ async function fetchWeather() {
                 dailyMinApparentTemp: data.daily.apparent_temperature_min,
                 precipitationChance: data.daily.precipitation_probability_max,
             };
+            geoCoordinatesCache = { latitude: latitude, longitude: longitude };
             weatherDataCache.data = weatherData;
             weatherDataCache.timeStamp = Date.now();
             let apiResponse: IWeatherAPIResponse = {
@@ -125,7 +139,7 @@ async function fetchWeather() {
                 weatherData: weatherData,
                 message: "success, connection made",
             };
-
+            console.log(apiResponse);
             return apiResponse;
         } else {
             console.log("cached weather data");
@@ -165,7 +179,6 @@ async function fetchGeoLocationData(cityName: string) {
                     longitude: data.longitude,
                     latitude: data.latitude,
                 };
-
                 return locationData;
             });
             let apiResponse: IGeoAPIResponse = {

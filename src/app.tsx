@@ -6,18 +6,13 @@ import CurrentDayWeatherBanner from "./Components/CurrentDayWeatherBanner";
 import PrecipitationCard from "./Components/PrecipitationCard";
 import Menu from "./Components/Menu";
 import "./app.css";
-import { IGeoAPIResponse, ILocationData, IWeatherAPIResponse, IWeatherData } from "./typings";
+import { IGeoAPIResponse, IGeoCoordinatesData, IWeatherAPIResponse, IWeatherData } from "./typings";
 import { WEATHERCODES, ISOFormatTimeZoneOffset } from "./utilities";
 import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
 import buttonLeftIcon from "./assets/button_left.svg";
 import buttonRightIcon from "./assets/button_right.svg";
 const root = createRoot(document.body);
 root.render(<App />);
-
-interface IGeoCoordinates {
-    latitide: number;
-    longitude: number;
-}
 
 function App() {
     console.log("Width: " + window.innerWidth);
@@ -26,15 +21,18 @@ function App() {
     const [weatherData, setWeatherData] = useState<IWeatherData | null>(null);
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // fake loading screen for UX
-    let temp: IGeoCoordinates = { latitide: 0, longitude: 0 };
+    let temp: IGeoCoordinatesData = { latitude: 43.7064, longitude: -79.3986, cityName: "test" };
 
-    const [currentCityCoordinates, setCurrentCityCoordinates] = useState<IGeoCoordinates>(temp);
+    const [currentCityGeoData, setCurrentCityGeoData] = useState<IGeoCoordinatesData>(temp);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
-        const apiCall: Promise<IWeatherAPIResponse> = window.mainProcess.getWeatherData();
+        const apiCall: Promise<IWeatherAPIResponse> = window.mainProcess.getWeatherData(
+            currentCityGeoData.latitude,
+            currentCityGeoData.longitude,
+        );
 
         const delayTimer: Promise<any> = new Promise((resolve) => setTimeout(resolve, 1200));
         const arrayOfPromiseToResolve: Promise<any>[] = [apiCall, delayTimer];
@@ -59,19 +57,23 @@ function App() {
                 setConnectionStatus(false);
                 setIsLoading(false);
             });
-    }, []);
+    }, [currentCityGeoData]);
 
     const handleSetCurrentCityFunction = useCallback(
-        async (latitude: number, longitude: number) => {
-            let coordinates: IGeoCoordinates = {
-                latitide: latitude,
-                longitude: longitude,
+        async (geoCoordinatesData: IGeoCoordinatesData) => {
+            let cityGeoData: IGeoCoordinatesData = {
+                latitude: geoCoordinatesData.latitude,
+                longitude: geoCoordinatesData.longitude,
+                cityName: geoCoordinatesData.cityName,
             };
-            setCurrentCityCoordinates(coordinates);
+            console.log(currentCityGeoData === cityGeoData);
+            setCurrentCityGeoData(cityGeoData);
+            setIsLoading(true);
+            setMenuOpen(false);
         },
         [],
     );
-    console.log(currentCityCoordinates);
+
     if (isLoading) {
         return (
             <div className="loading-screen">
@@ -93,8 +95,10 @@ function App() {
         const theme: string = setTheme(currentWeatherData.weatherCode, currentWeatherData.isDay);
         const weatherCards = createWeatherCards(weatherData!, theme);
         const precipitationCards = createPrecipitationCards(weatherData!);
+
         return (
             <div className={`app-container ${theme}`}>
+                <p>{currentCityGeoData.cityName}</p>
                 {menuOpen ? (
                     <Menu
                         handleCloseMenuFunction={setMenuOpen}
@@ -172,18 +176,22 @@ function createWeatherCards(_weatherData: IWeatherData, theme: string) {
     let _weatherCards = [];
     const DAYSOFTHEWEEK: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+    //use this function to display time zone off set maybe???
     let UTCTimeZoneOffset: string = ISOFormatTimeZoneOffset(
         Math.trunc(_weatherData.utcOffSetSeconds / 3600),
     );
 
     for (let i = 0; i < _weatherData.forecastDays.length; i++) {
+        //ISO format is not used at all as it messes with weather app getting date to
+        //match local time zone
         let ISOFormat = `${_weatherData.forecastDays[i]}T00:00:00${UTCTimeZoneOffset}`;
-        let day = new Date(ISOFormat);
+        let day = new Date(_weatherData.forecastDays[i]);
 
-        let weekdayName = i == 0 ? "Today" : DAYSOFTHEWEEK[day.getDay()];
+        let weekdayName = i == 0 ? "Today" : DAYSOFTHEWEEK[day.getUTCDay()];
 
         weekday.push(weekdayName);
     }
+
     for (let i = 0; i < _weatherData.dailyMaxTemp.length; i++) {
         let maxTemp: number = Math.round(_weatherData.dailyMaxTemp[i]);
         let minTemp: number = Math.round(_weatherData.dailyMinTemp[i]);
@@ -211,9 +219,12 @@ function createPrecipitationCards(_weatherData: IWeatherData) {
 
     for (let i = 0; i < _weatherData.forecastDays.length; i++) {
         let ISOFormat = `${_weatherData.forecastDays[i]}T00:00:00${UTCTimeZoneOffset}`;
-        let day = new Date(ISOFormat);
+        let calendarDate = _weatherData.forecastDays[i];
 
-        let weekdayName = i == 0 ? "Today" : DAYSOFTHEWEEK[day.getDay()];
+        let day = new Date(calendarDate);
+        //let day = new Date(ISOFormat);
+
+        let weekdayName = i == 0 ? "Today" : DAYSOFTHEWEEK[day.getUTCDay()];
 
         weekday.push(weekdayName);
     }

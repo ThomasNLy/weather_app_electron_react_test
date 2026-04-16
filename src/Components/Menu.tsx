@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from "react";
 import CityCard from "./CityCard";
 import "./Menu.css";
-import { IGeoAPIResponse, ILocationData } from "../typings";
+import { ILocationData, IGeoCoordinatesData } from "../typings";
 interface IMenuProps {
     handleCloseMenuFunction: (newVal: boolean) => void;
     handleSearchCityFunction: (cityName: string) => Promise<ILocationData[] | null>;
-    handleSetCurrentCityFunction: (latitude: number, longitude: number) => void;
+    handleSetCurrentCityFunction: (geoData: IGeoCoordinatesData) => void;
 }
 export default function Menu({
     handleCloseMenuFunction,
@@ -55,7 +55,7 @@ export default function Menu({
 
 function createCityCards(
     locations: ILocationData[],
-    handleSetCurrentCityFunction: (latitude: number, longitude: number) => void,
+    handleSetCurrentCityFunction: (geoData: IGeoCoordinatesData) => void,
 ) {
     let cityCards = [];
     for (let i = 0; i < locations.length; i++) {

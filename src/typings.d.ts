@@ -16,7 +16,7 @@ declare global {
          * @see {@link IGeoAPIResponse}
          * @return {IWeatherAPIResponse} JSON object with weather data and api status
          */
-        getWeatherData: () => Promise<IWeatherAPIResponse>;
+        getWeatherData: (latitude: number, longitude: number) => Promise<IWeatherAPIResponse>;
         /**
          * @property {Promise<IGeoAPIResponse>} ```getLocationData(string)``` - The promise object returned representing
          * api response an array of location data based on the city name argument passed as a string
@@ -112,4 +112,9 @@ export interface ILocationData {
     country: string;
     latitude: number;
     longitude: number;
+}
+export interface IGeoCoordinatesData {
+    latitude: number;
+    longitude: number;
+    cityName: string;
 }
