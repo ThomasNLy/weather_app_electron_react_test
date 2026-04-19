@@ -11,6 +11,7 @@ import { WEATHERCODES, ISOFormatTimeZoneOffset } from "./utilities";
 import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
 import buttonLeftIcon from "./assets/button_left.svg";
 import buttonRightIcon from "./assets/button_right.svg";
+import hamburgerMenuButtonIcon from "./assets/hamburger_menu_button.svg";
 const root = createRoot(document.body);
 root.render(<App />);
 
@@ -21,7 +22,7 @@ function App() {
     const [weatherData, setWeatherData] = useState<IWeatherData | null>(null);
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // fake loading screen for UX
-    let temp: IGeoCoordinatesData = { latitude: 43.7064, longitude: -79.3986, cityName: "test" };
+    let temp: IGeoCoordinatesData = { latitude: 43.7064, longitude: -79.3986, cityName: "Toronto" };
 
     const [currentCityGeoData, setCurrentCityGeoData] = useState<IGeoCoordinatesData>(temp);
 
@@ -98,7 +99,6 @@ function App() {
 
         return (
             <div className={`app-container ${theme}`}>
-                <p>{currentCityGeoData.cityName}</p>
                 {menuOpen ? (
                     <Menu
                         handleCloseMenuFunction={setMenuOpen}
@@ -106,10 +106,18 @@ function App() {
                         handleSetCurrentCityFunction={handleSetCurrentCityFunction}
                     />
                 ) : (
-                    <button onClick={() => setMenuOpen(true)}>open menu</button>
+                    <button className="open-menu-button" onClick={() => setMenuOpen(true)}>
+                        <img
+                            className="button-svg-icon"
+                            src={hamburgerMenuButtonIcon}
+                            alt="hamburger menu button"
+                        />
+                    </button>
                 )}
                 <div className="app-main-content">
-                    <h2>Weather App</h2>
+                    <h1 className="current-city-header content-header">
+                        {currentCityGeoData.cityName}
+                    </h1>
                     <CurrentDayWeatherBanner
                         unit={weatherData!.units.temperature}
                         minTemp={currentWeatherData.minTemp}

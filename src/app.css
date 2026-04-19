@@ -17,9 +17,29 @@
     width: 80%;
     justify-self: center;
 }
+.current-city-header {
+    position: relative;
+    top: 1.5em;
+    font-size: 3rem;
+}
 .content-header {
-    /* margin-left: 10%; */
     color: white;
+}
+
+.open-menu-button {
+    background: none;
+    border: none;
+    padding: 0 5px;
+    /* padding: 0; */
+    align-items: center;
+    position: absolute;
+    top: 2%;
+    left: 3%;
+    width: 42px;
+    height: 32px;
+}
+.open-menu-button:hover {
+    background-color: rgb(180, 180, 180);
 }
 .precipitation-card-container {
     /* width: 80%; */

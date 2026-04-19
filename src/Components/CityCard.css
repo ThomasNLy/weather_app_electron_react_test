@@ -10,8 +10,9 @@
     user-select: none;
     margin-top: -2px;
     padding-bottom: 0.5em;
-    padding-top: 0.5em;
+    padding-top: 0.25em;
     padding-left: 0.7em;
+    grid-template-rows: auto;
 }
 .city-card:hover {
     background-color: rgb(180, 180, 180);
@@ -21,7 +22,7 @@
     font-weight: 400;
     margin-block: 0;
 }
-.city-card h2 {
+.city-card p {
     font-size: 12px;
     font-weight: 400;
     margin-block: 0;

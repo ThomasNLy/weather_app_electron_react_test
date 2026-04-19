@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import CityCard from "./CityCard";
 import "./Menu.css";
 import { ILocationData, IGeoCoordinatesData } from "../typings";
+import closeMenuButtonIcon from "../assets/close_menu_button.svg";
 interface IMenuProps {
     handleCloseMenuFunction: (newVal: boolean) => void;
     handleSearchCityFunction: (cityName: string) => Promise<ILocationData[] | null>;
@@ -40,7 +41,7 @@ export default function Menu({
                         handleCloseMenuFunction(false);
                     }}
                 >
-                    close menu
+                    <img src={closeMenuButtonIcon} alt="close menu button" />
                 </button>
                 <div className="search-bar">
                     <label htmlFor="city-search" className="hide-visually"></label>
