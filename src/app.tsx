@@ -9,9 +9,9 @@ import "./app.css";
 import { IGeoAPIResponse, IGeoCoordinatesData, IWeatherAPIResponse, IWeatherData } from "./typings";
 import { WEATHERCODES, ISOFormatTimeZoneOffset } from "./utilities";
 import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
-import buttonLeftIcon from "./assets/button_left.svg";
-import buttonRightIcon from "./assets/button_right.svg";
-import hamburgerMenuButtonIcon from "./assets/hamburger_menu_button.svg";
+import buttonLeftIcon from "./assets/button_icons/button_left.svg";
+import buttonRightIcon from "./assets/button_icons/button_right.svg";
+import hamburgerMenuButtonIcon from "./assets/button_icons/hamburger_menu_button.svg";
 const root = createRoot(document.body);
 root.render(<App />);
 
@@ -22,11 +22,17 @@ function App() {
     const [weatherData, setWeatherData] = useState<IWeatherData | null>(null);
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // fake loading screen for UX
-    let temp: IGeoCoordinatesData = { latitude: 43.7064, longitude: -79.3986, cityName: "Toronto" };
+    let temp: IGeoCoordinatesData = {
+        latitude: 43.7064,
+        longitude: -79.3986,
+        city: "Toronto",
+        adminRegion: "Ontario",
+        country: "Canada",
+    };
 
     const [currentCityGeoData, setCurrentCityGeoData] = useState<IGeoCoordinatesData>(temp);
 
-    const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const [menuOpen, setMenuOpen] = useState<boolean>(true);
 
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -63,9 +69,11 @@ function App() {
     const handleSetCurrentCityFunction = useCallback(
         async (geoCoordinatesData: IGeoCoordinatesData) => {
             let cityGeoData: IGeoCoordinatesData = {
+                city: geoCoordinatesData.city,
+                adminRegion: geoCoordinatesData.adminRegion,
+                country: geoCoordinatesData.country,
                 latitude: geoCoordinatesData.latitude,
                 longitude: geoCoordinatesData.longitude,
-                cityName: geoCoordinatesData.cityName,
             };
             console.log(currentCityGeoData === cityGeoData);
             setCurrentCityGeoData(cityGeoData);
@@ -101,9 +109,9 @@ function App() {
             <div className={`app-container ${theme}`}>
                 {menuOpen ? (
                     <Menu
-                        handleCloseMenuFunction={setMenuOpen}
-                        handleSearchCityFunction={getLocationData}
-                        handleSetCurrentCityFunction={handleSetCurrentCityFunction}
+                        handleCloseMenuCallBackFunction={setMenuOpen}
+                        handleSearchCityCallBackFunction={getLocationData}
+                        handleSetCurrentCityCallBackFunction={handleSetCurrentCityFunction}
                     />
                 ) : (
                     <button className="open-menu-button" onClick={() => setMenuOpen(true)}>
@@ -116,7 +124,7 @@ function App() {
                 )}
                 <div className="app-main-content">
                     <h1 className="current-city-header content-header">
-                        {currentCityGeoData.cityName}
+                        {`${currentCityGeoData.city}, ${currentCityGeoData.country}`}
                     </h1>
                     <CurrentDayWeatherBanner
                         unit={weatherData!.units.temperature}
