@@ -1,24 +1,43 @@
 import React, { useState, useCallback } from "react";
 import CityCard from "./CityCard";
 import "./Menu.css";
-import { ILocationData, IGeoCoordinatesData } from "../typings";
-import closeMenuButtonIcon from "../assets/close_menu_button.svg";
+import { IGeoCoordinatesData } from "../typings";
+import closeMenuButtonIcon from "../assets/button_icons/close_menu_button.svg";
+import searchButtonIcon from "../assets/button_icons/search_button.svg";
 interface IMenuProps {
-    handleCloseMenuFunction: (newVal: boolean) => void;
-    handleSearchCityFunction: (cityName: string) => Promise<ILocationData[] | null>;
-    handleSetCurrentCityFunction: (geoData: IGeoCoordinatesData) => void;
+    handleCloseMenuCallBackFunction: (newVal: boolean) => void;
+    handleSearchCityCallBackFunction: (cityName: string) => Promise<IGeoCoordinatesData[] | null>;
+    handleSetCurrentCityCallBackFunction: (geoData: IGeoCoordinatesData) => void;
 }
 export default function Menu({
-    handleCloseMenuFunction,
-    handleSearchCityFunction,
-    handleSetCurrentCityFunction,
+    handleCloseMenuCallBackFunction,
+    handleSearchCityCallBackFunction,
+    handleSetCurrentCityCallBackFunction,
 }: IMenuProps) {
-    const [locations, setLocations] = useState<ILocationData[] | null>(null);
+    const [locations, setLocations] = useState<IGeoCoordinatesData[] | null>(null);
 
-    const handleCitySearchFunction = useCallback(async (cityName: string) => {
-        const apiData: ILocationData[] | null = await handleSearchCityFunction(cityName);
+    // const handleCitySearchFunction = useCallback(async (cityName: string) => {
+    //     const apiData: IGeoCoordinatesData[] | null = await handleSearchCityCallBackFunction(cityName);
+    //     setLocations(apiData);
+    // }, []);
+    const handleCitySearchFunction = async (cityName: string) => {
+        const apiData: IGeoCoordinatesData[] | null =
+            await handleSearchCityCallBackFunction(cityName);
         setLocations(apiData);
-    }, []);
+    };
+
+    const handleSearchButtonOnClick = () => {
+        if (locations !== null) {
+            let firstResultGeoData: IGeoCoordinatesData = {
+                city: locations[0].city,
+                adminRegion: locations[0].adminRegion,
+                country: locations[0].country,
+                latitude: locations[0].latitude,
+                longitude: locations[0].longitude,
+            };
+            handleSetCurrentCityCallBackFunction(firstResultGeoData);
+        }
+    };
 
     function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
         handleCitySearchFunction(e.target.value);
@@ -26,9 +45,9 @@ export default function Menu({
 
     let cityCards =
         locations != null ? (
-            createCityCards(locations, handleSetCurrentCityFunction)
+            createCityCards(locations, handleSetCurrentCityCallBackFunction)
         ) : (
-            <p>no city found</p>
+            <p className="no-city-found-text">no city found</p>
         );
 
     return (
@@ -38,15 +57,29 @@ export default function Menu({
                     className="close-menu-button"
                     type="button"
                     onClick={() => {
-                        handleCloseMenuFunction(false);
+                        handleCloseMenuCallBackFunction(false);
                     }}
                 >
                     <img src={closeMenuButtonIcon} alt="close menu button" />
                 </button>
-                <div className="search-bar">
+                <div className="search-bar-container">
                     <label htmlFor="city-search" className="hide-visually"></label>
-                    <input type="search" name="q" id="city-search" onChange={handleOnChange} />
-                    <button type="submit">search</button>
+                    <div className="search-bar">
+                        <input
+                            type="search"
+                            name="q"
+                            id="city-search"
+                            placeholder="Search for City"
+                            onChange={handleOnChange}
+                        />
+                        <button type="submit" onClick={handleSearchButtonOnClick}>
+                            <img
+                                className="search-button-svg-icon"
+                                src={searchButtonIcon}
+                                alt="search button"
+                            />
+                        </button>
+                    </div>
                 </div>
                 <div className="city-search-results-container">{cityCards}</div>
             </div>
@@ -55,7 +88,7 @@ export default function Menu({
 }
 
 function createCityCards(
-    locations: ILocationData[],
+    locations: IGeoCoordinatesData[],
     handleSetCurrentCityFunction: (geoData: IGeoCoordinatesData) => void,
 ) {
     let cityCards = [];
