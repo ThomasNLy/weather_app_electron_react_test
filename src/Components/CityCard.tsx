@@ -21,7 +21,9 @@ export default function CityCard({
     let geoData: IGeoCoordinatesData = {
         latitude: latitude,
         longitude: longitude,
-        cityName: cityName,
+        city: cityName,
+        adminRegion: adminRegion,
+        country: countryName,
     };
     return (
         <div className="city-card" onClick={() => setCurrentCityFunction(geoData)}>

@@ -70,7 +70,7 @@ ipcMain.handle("get-location-data", async (event, cityName: string) => {
 
 import path from "path";
 import dotenv from "dotenv";
-import { IWeatherData, IWeatherAPIResponse, IGeoAPIResponse, ILocationData } from "./typings";
+import { IWeatherData, IWeatherAPIResponse, IGeoAPIResponse, IGeoCoordinatesData } from "./typings";
 
 let weatherDataCache: { data: IWeatherData | null; timeStamp: number } = {
     data: null,
@@ -171,8 +171,8 @@ async function fetchGeoLocationData(cityName: string) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const geoData = await response.json();
-            const locationData: ILocationData[] = geoData.results.map((data: any) => {
-                let locationData: ILocationData = {
+            const locationData: IGeoCoordinatesData[] = geoData.results.map((data: any) => {
+                let locationData: IGeoCoordinatesData = {
                     city: data.name,
                     adminRegion: data.admin1,
                     country: data.country,

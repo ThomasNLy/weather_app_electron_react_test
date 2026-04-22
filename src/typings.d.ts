@@ -104,17 +104,13 @@ export interface IWeatherAPIResponse {
 }
 
 export interface IGeoAPIResponse {
-    locations: ILocationData[] | null;
+    locations: IGeoCoordinatesData[] | null;
 }
-export interface ILocationData {
+
+export interface IGeoCoordinatesData {
     city: string;
     adminRegion: string;
     country: string;
     latitude: number;
     longitude: number;
-}
-export interface IGeoCoordinatesData {
-    latitude: number;
-    longitude: number;
-    cityName: string;
 }
