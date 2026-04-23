@@ -34,9 +34,9 @@ function App() {
     };
 
     const [currentCityGeoData, setCurrentCityGeoData] = useState<IGeoCoordinatesData>(temp);
-    const [savedCitiesDataList, setSavedCitiesDataList] = useState<IGeoCoordinatesData[]>([]);
+    const [savedCitiesDataList, setSavedCitiesDataList] = useState<IGeoCoordinatesData[]>([temp]);
     const [searchCityMenuOpen, setSearchCityMenuOpen] = useState<boolean>(false);
-    const [savedCitiesMenuOpen, setSavedCitiesMenuOpen] = useState<boolean>(false);
+    const [savedCitiesMenuOpen, setSavedCitiesMenuOpen] = useState<boolean>(true);
 
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -99,7 +99,7 @@ function App() {
                 console.log(notInList);
                 console.log(cityData);
             });
-            if (notInList) {
+            if (notInList && currentList.length < 5) {
                 return [...currentList, newCityGeoData];
             } else {
                 return currentList;

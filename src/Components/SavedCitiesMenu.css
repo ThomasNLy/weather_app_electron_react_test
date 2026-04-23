@@ -17,6 +17,10 @@
     flex-direction: column;
     position: relative;
 }
+.saved-cities-menu-header {
+    margin-block: 0;
+    margin-top: -0.5em;
+}
 .close-menu-button {
     background: none;
     border: none;
@@ -37,6 +41,25 @@
     grid-template-columns: 1fr;
     margin-top: 3em;
 }
+
+.saved-city-card {
+    position: relative;
+}
+.delete-button {
+    background: none;
+    border: none;
+
+    width: 54px;
+    height: 54px;
+    padding: 15px 15px;
+    position: absolute;
+    right: 0%;
+    top: 0%;
+}
+.delete-button:hover {
+    background-color: rgb(180, 180, 180);
+}
+
 @media screen and (min-width: 700px) {
     .menu {
         width: 35%;
