@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import WeatherCard from "./Components/WeatherCard";
 import CurrentDayWeatherBanner from "./Components/CurrentDayWeatherBanner";
 import PrecipitationCard from "./Components/PrecipitationCard";
-import Menu from "./Components/Menu";
+
 import "./app.css";
 import { IGeoAPIResponse, IGeoCoordinatesData, IWeatherAPIResponse, IWeatherData } from "./typings";
 import { WEATHERCODES, ISOFormatTimeZoneOffset } from "./utilities";
@@ -13,6 +13,8 @@ import buttonLeftIcon from "./assets/button_icons/button_left.svg";
 import buttonRightIcon from "./assets/button_icons/button_right.svg";
 import searchMenuButtonIcon from "./assets/button_icons/search_icon_white.svg";
 import savedCitiesMenuButtonIcon from "./assets/button_icons/location_icon_white.svg";
+import SearchCityMenu from "./Components/SearchCityMenu";
+import SavedCitiesMenu from "./Components/SavedCitiesMenu";
 const root = createRoot(document.body);
 root.render(<App />);
 
@@ -33,7 +35,8 @@ function App() {
 
     const [currentCityGeoData, setCurrentCityGeoData] = useState<IGeoCoordinatesData>(temp);
 
-    const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const [searchCityMenuOpen, setSearchCityMenuOpen] = useState<boolean>(false);
+    const [savedCitiesMenuOpen, setSavedCitiesMenuOpen] = useState<boolean>(false);
 
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -79,10 +82,48 @@ function App() {
             console.log(currentCityGeoData === cityGeoData);
             setCurrentCityGeoData(cityGeoData);
             setIsLoading(true);
-            setMenuOpen(false);
+            setSearchCityMenuOpen(false);
         },
         [],
     );
+
+    function currentMenu() {
+        if (searchCityMenuOpen) {
+            return (
+                <SearchCityMenu
+                    handleCloseMenuCallBackFunction={setSearchCityMenuOpen}
+                    handleSearchCityCallBackFunction={getLocationData}
+                    handleSetCurrentCityCallBackFunction={handleSetCurrentCityFunction}
+                />
+            );
+        } else if (savedCitiesMenuOpen) {
+            return (
+                <SavedCitiesMenu
+                    handleCloseMenuCallBackFunction={setSavedCitiesMenuOpen}
+                    handleSetCurrentCityCallBackFunction={handleSetCurrentCityFunction}
+                />
+            );
+        } else {
+            return (
+                <div className="menu-buttons-container">
+                    <button className="menu-button" onClick={() => setSearchCityMenuOpen(true)}>
+                        <img
+                            className="button-svg-icon"
+                            src={searchMenuButtonIcon}
+                            alt="search menu button"
+                        />
+                    </button>
+                    <button className="menu-button" onClick={() => setSavedCitiesMenuOpen(true)}>
+                        <img
+                            className="button-svg-icon"
+                            src={savedCitiesMenuButtonIcon}
+                            alt="saved cities menu button"
+                        />
+                    </button>
+                </div>
+            );
+        }
+    }
 
     if (isLoading) {
         return (
@@ -105,24 +146,11 @@ function App() {
         const theme: string = setTheme(currentWeatherData.weatherCode, currentWeatherData.isDay);
         const weatherCards = createWeatherCards(weatherData!, theme);
         const precipitationCards = createPrecipitationCards(weatherData!);
+        let menu = currentMenu();
 
         return (
             <div className={`app-container ${theme}`}>
-                {menuOpen ? (
-                    <Menu
-                        handleCloseMenuCallBackFunction={setMenuOpen}
-                        handleSearchCityCallBackFunction={getLocationData}
-                        handleSetCurrentCityCallBackFunction={handleSetCurrentCityFunction}
-                    />
-                ) : (
-                    <button className="open-menu-button" onClick={() => setMenuOpen(true)}>
-                        <img
-                            className="button-svg-icon"
-                            src={searchMenuButtonIcon}
-                            alt="search menu button"
-                        />
-                    </button>
-                )}
+                {menu}
                 <div className="app-main-content">
                     <h1 className="current-city-header content-header">
                         {`${currentCityGeoData.city}, ${currentCityGeoData.country}`}

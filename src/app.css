@@ -25,23 +25,27 @@
 .content-header {
     color: white;
 }
-
-.open-menu-button {
-    background: none;
-    border: none;
-    padding: 0 5px;
-    /* padding: 0; */
-    align-items: center;
+.menu-buttons-container {
     position: absolute;
     top: 2%;
     left: 3%;
+    display: grid;
+    grid-template-rows: auto;
+    row-gap: 0.5em;
+}
+.menu-button {
+    background: none;
+    border: none;
+
     width: 36px;
     height: 36px;
     padding: 5px 5px;
 }
-.open-menu-button:hover {
+
+.menu-button:hover {
     background-color: rgb(180, 180, 180);
 }
+
 .precipitation-card-container {
     /* width: 80%; */
     margin-left: auto;

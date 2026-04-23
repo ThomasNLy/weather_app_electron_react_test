@@ -5,7 +5,7 @@
     margin-left: auto;
 }
 
-.weather-banner h1 {
+.weather-banner h2 {
     color: white;
     font-weight: 600;
 }
@@ -22,12 +22,12 @@
     align-items: start;
 }
 .current-weather-data-container p,
-.current-weather-data-container h2 {
+.current-weather-data-container h3 {
     margin-block: 0;
     color: white;
 }
 
-.current-weather-data-container h2 {
+.current-weather-data-container h3 {
     font-size: 3.12rem;
     font-weight: 600;
 }

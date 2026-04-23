@@ -30,11 +30,11 @@ export default function CurrentDayWeatherBanner({
     let weatherStatus = weatherStatusIcon(weatherCode, isDay);
     return (
         <div className="weather-banner">
-            <h1>Current Weather</h1>
+            <h2>Current Weather</h2>
             <div className="current-weather-container">
                 <img src={weatherStatus.icon} alt={weatherStatus.status} />
                 <div className="current-weather-data-container">
-                    <h2>{weatherStatus.status}</h2>
+                    <h3>{weatherStatus.status}</h3>
                     <p className="current-weather-current-temp">{`${currentTemp}${unit}`}</p>
                     <div className="weather-banner-additional-weather-data">
                         <p>Low {minTemp}°</p>

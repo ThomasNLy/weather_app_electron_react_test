@@ -1,0 +1,63 @@
+.menu-overlay {
+    height: 100%;
+    width: 100%;
+    background: rgba(54, 54, 54, 0.767);
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+}
+.menu {
+    width: 50%;
+    height: 100%;
+    background: var(--menu-bg-colour);
+    padding-top: 7em;
+    padding-left: 5%;
+    padding-right: 5%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.close-menu-button {
+    background: none;
+    border: none;
+    padding: 5px 5px;
+    align-items: center;
+    position: absolute;
+    top: 1.5%;
+    left: 85%;
+    width: 36px;
+    height: 36px;
+}
+.close-menu-button:hover {
+    background-color: rgb(180, 180, 180);
+}
+
+.city-list-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 3em;
+}
+@media screen and (min-width: 700px) {
+    .menu {
+        width: 35%;
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+    .close-menu-button {
+        left: 80%;
+    }
+}
+@media screen and (min-width: 850px) {
+    .close-menu-button {
+        left: 87%;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .menu {
+        width: 20%;
+    }
+    .close-menu-button {
+        left: 85%;
+    }
+}

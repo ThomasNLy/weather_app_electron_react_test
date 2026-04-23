@@ -1,19 +1,19 @@
 import React, { useState, useCallback } from "react";
 import CityCard from "./CityCard";
-import "./Menu.css";
+import "./SearchCityMenu.css";
 import { IGeoCoordinatesData } from "../typings";
 import closeMenuButtonIcon from "../assets/button_icons/close_menu_button.svg";
 import searchButtonIcon from "../assets/button_icons/search_icon_black.svg";
-interface IMenuProps {
+interface ISearchCityMenuProps {
     handleCloseMenuCallBackFunction: (newVal: boolean) => void;
     handleSearchCityCallBackFunction: (cityName: string) => Promise<IGeoCoordinatesData[] | null>;
     handleSetCurrentCityCallBackFunction: (geoData: IGeoCoordinatesData) => void;
 }
-export default function Menu({
+export default function SearchCityMenu({
     handleCloseMenuCallBackFunction,
     handleSearchCityCallBackFunction,
     handleSetCurrentCityCallBackFunction,
-}: IMenuProps) {
+}: ISearchCityMenuProps) {
     const [locations, setLocations] = useState<IGeoCoordinatesData[] | null>(null);
 
     // const handleCitySearchFunction = useCallback(async (cityName: string) => {
