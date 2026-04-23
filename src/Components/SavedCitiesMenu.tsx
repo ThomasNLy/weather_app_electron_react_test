@@ -5,19 +5,22 @@ import { IGeoCoordinatesData } from "../typings";
 import closeMenuButtonIcon from "../assets/button_icons/close_menu_button.svg";
 
 interface ISavedCitiesMenuProps {
-    handleCloseMenuCallBackFunction: (newVal: boolean) => void;
+    handleSetMenuOpenCallBackFunction: (newVal: boolean) => void;
     handleSetCurrentCityCallBackFunction: (geoData: IGeoCoordinatesData) => void;
+    savedCitiesList: IGeoCoordinatesData[];
 }
 export default function SavedCitiesMenu({
-    handleCloseMenuCallBackFunction,
+    handleSetMenuOpenCallBackFunction,
     handleSetCurrentCityCallBackFunction,
+    savedCitiesList,
 }: ISavedCitiesMenuProps) {
-    //change to be a prop passed down by parent
-    const [locations, setLocations] = useState<IGeoCoordinatesData[] | null>(null);
-
+    const handleSetCurrentCityOnClick = (geoData: IGeoCoordinatesData) => {
+        handleSetCurrentCityCallBackFunction(geoData);
+        handleSetMenuOpenCallBackFunction(false);
+    };
     let cityCards =
-        locations != null ? (
-            createCityCards(locations, handleSetCurrentCityCallBackFunction)
+        savedCitiesList.length > 0 ? (
+            createCityCards(savedCitiesList, handleSetCurrentCityOnClick)
         ) : (
             <p className="no-city-found-text">no cities saved</p>
         );
@@ -29,7 +32,7 @@ export default function SavedCitiesMenu({
                     className="close-menu-button"
                     type="button"
                     onClick={() => {
-                        handleCloseMenuCallBackFunction(false);
+                        handleSetMenuOpenCallBackFunction(false);
                     }}
                 >
                     <img src={closeMenuButtonIcon} alt="close menu button" />
@@ -55,7 +58,7 @@ function createCityCards(
                 countryName={city.country}
                 latitude={city.latitude}
                 longitude={city.longitude}
-                setCurrentCityFunction={handleSetCurrentCityFunction}
+                setCurrentCityFunctionOnClick={handleSetCurrentCityFunction}
             />,
         );
     }

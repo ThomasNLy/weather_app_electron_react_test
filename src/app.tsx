@@ -34,7 +34,7 @@ function App() {
     };
 
     const [currentCityGeoData, setCurrentCityGeoData] = useState<IGeoCoordinatesData>(temp);
-
+    const [savedCitiesDataList, setSavedCitiesDataList] = useState<IGeoCoordinatesData[]>([]);
     const [searchCityMenuOpen, setSearchCityMenuOpen] = useState<boolean>(false);
     const [savedCitiesMenuOpen, setSavedCitiesMenuOpen] = useState<boolean>(false);
 
@@ -70,28 +70,49 @@ function App() {
             });
     }, [currentCityGeoData]);
 
-    const handleSetCurrentCityFunction = useCallback(
-        async (geoCoordinatesData: IGeoCoordinatesData) => {
-            let cityGeoData: IGeoCoordinatesData = {
-                city: geoCoordinatesData.city,
-                adminRegion: geoCoordinatesData.adminRegion,
-                country: geoCoordinatesData.country,
-                latitude: geoCoordinatesData.latitude,
-                longitude: geoCoordinatesData.longitude,
-            };
-            console.log(currentCityGeoData === cityGeoData);
-            setCurrentCityGeoData(cityGeoData);
-            setIsLoading(true);
-            setSearchCityMenuOpen(false);
-        },
-        [],
-    );
+    //------------------------set current city function-----------------------
+    const handleSetCurrentCityFunction = useCallback((geoCoordinatesData: IGeoCoordinatesData) => {
+        let cityGeoData: IGeoCoordinatesData = {
+            city: geoCoordinatesData.city,
+            adminRegion: geoCoordinatesData.adminRegion,
+            country: geoCoordinatesData.country,
+            latitude: geoCoordinatesData.latitude,
+            longitude: geoCoordinatesData.longitude,
+        };
+        console.log(currentCityGeoData === cityGeoData);
+        addNewCityToSavedCitiesList(cityGeoData);
+        setCurrentCityGeoData(cityGeoData);
 
+        setIsLoading(true);
+    }, []);
+    //---------------------add to list of saved cities function-------------------------
+    function addNewCityToSavedCitiesList(newCityGeoData: IGeoCoordinatesData) {
+        setSavedCitiesDataList((currentList) => {
+            let notInList = true;
+            currentList.some((cityData) => {
+                if (
+                    cityData.latitude === newCityGeoData.latitude &&
+                    cityData.longitude === newCityGeoData.longitude
+                ) {
+                    notInList = false;
+                }
+                console.log(notInList);
+                console.log(cityData);
+            });
+            if (notInList) {
+                return [...currentList, newCityGeoData];
+            } else {
+                return currentList;
+            }
+        });
+    }
+
+    //--------------------------------------------------------------------
     function currentMenu() {
         if (searchCityMenuOpen) {
             return (
                 <SearchCityMenu
-                    handleCloseMenuCallBackFunction={setSearchCityMenuOpen}
+                    handleSetMenuOpenCallBackFunction={setSearchCityMenuOpen}
                     handleSearchCityCallBackFunction={getLocationData}
                     handleSetCurrentCityCallBackFunction={handleSetCurrentCityFunction}
                 />
@@ -99,8 +120,9 @@ function App() {
         } else if (savedCitiesMenuOpen) {
             return (
                 <SavedCitiesMenu
-                    handleCloseMenuCallBackFunction={setSavedCitiesMenuOpen}
+                    handleSetMenuOpenCallBackFunction={setSavedCitiesMenuOpen}
                     handleSetCurrentCityCallBackFunction={handleSetCurrentCityFunction}
+                    savedCitiesList={savedCitiesDataList}
                 />
             );
         } else {

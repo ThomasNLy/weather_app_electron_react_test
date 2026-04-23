@@ -7,7 +7,7 @@ interface ICityCardProps {
     countryName: string;
     latitude: number;
     longitude: number;
-    setCurrentCityFunction: (geoData: IGeoCoordinatesData) => void;
+    setCurrentCityFunctionOnClick: (geoData: IGeoCoordinatesData) => void;
 }
 
 export default function CityCard({
@@ -16,7 +16,7 @@ export default function CityCard({
     countryName,
     latitude,
     longitude,
-    setCurrentCityFunction,
+    setCurrentCityFunctionOnClick,
 }: ICityCardProps) {
     let geoData: IGeoCoordinatesData = {
         latitude: latitude,
@@ -26,7 +26,7 @@ export default function CityCard({
         country: countryName,
     };
     return (
-        <div className="city-card" onClick={() => setCurrentCityFunction(geoData)}>
+        <div className="city-card" onClick={() => setCurrentCityFunctionOnClick(geoData)}>
             <h1>{cityName}</h1>
             <p>{`${adminRegion}, ${countryName}`}</p>
         </div>

@@ -5,25 +5,25 @@ import { IGeoCoordinatesData } from "../typings";
 import closeMenuButtonIcon from "../assets/button_icons/close_menu_button.svg";
 import searchButtonIcon from "../assets/button_icons/search_icon_black.svg";
 interface ISearchCityMenuProps {
-    handleCloseMenuCallBackFunction: (newVal: boolean) => void;
+    handleSetMenuOpenCallBackFunction: (newVal: boolean) => void;
     handleSearchCityCallBackFunction: (cityName: string) => Promise<IGeoCoordinatesData[] | null>;
     handleSetCurrentCityCallBackFunction: (geoData: IGeoCoordinatesData) => void;
 }
 export default function SearchCityMenu({
-    handleCloseMenuCallBackFunction,
+    handleSetMenuOpenCallBackFunction,
     handleSearchCityCallBackFunction,
     handleSetCurrentCityCallBackFunction,
 }: ISearchCityMenuProps) {
     const [locations, setLocations] = useState<IGeoCoordinatesData[] | null>(null);
 
-    // const handleCitySearchFunction = useCallback(async (cityName: string) => {
-    //     const apiData: IGeoCoordinatesData[] | null = await handleSearchCityCallBackFunction(cityName);
-    //     setLocations(apiData);
-    // }, []);
     const handleCitySearchFunction = async (cityName: string) => {
         const apiData: IGeoCoordinatesData[] | null =
             await handleSearchCityCallBackFunction(cityName);
         setLocations(apiData);
+    };
+    const handleSetCurrentCityOnClick = (geoData: IGeoCoordinatesData) => {
+        handleSetCurrentCityCallBackFunction(geoData);
+        handleSetMenuOpenCallBackFunction(false);
     };
 
     const handleSearchButtonOnClick = () => {
@@ -45,7 +45,7 @@ export default function SearchCityMenu({
 
     let cityCards =
         locations != null ? (
-            createCityCards(locations, handleSetCurrentCityCallBackFunction)
+            createCityCards(locations, handleSetCurrentCityOnClick)
         ) : (
             <p className="no-city-found-text">no city found</p>
         );
@@ -57,7 +57,7 @@ export default function SearchCityMenu({
                     className="close-menu-button"
                     type="button"
                     onClick={() => {
-                        handleCloseMenuCallBackFunction(false);
+                        handleSetMenuOpenCallBackFunction(false);
                     }}
                 >
                     <img src={closeMenuButtonIcon} alt="close menu button" />
@@ -89,7 +89,7 @@ export default function SearchCityMenu({
 
 function createCityCards(
     locations: IGeoCoordinatesData[],
-    handleSetCurrentCityFunction: (geoData: IGeoCoordinatesData) => void,
+    handleSetCurrentCityFunctionOnClick: (geoData: IGeoCoordinatesData) => void,
 ) {
     let cityCards = [];
     for (let i = 0; i < locations.length; i++) {
@@ -101,7 +101,7 @@ function createCityCards(
                 countryName={city.country}
                 latitude={city.latitude}
                 longitude={city.longitude}
-                setCurrentCityFunction={handleSetCurrentCityFunction}
+                setCurrentCityFunctionOnClick={handleSetCurrentCityFunctionOnClick}
             />,
         );
     }
