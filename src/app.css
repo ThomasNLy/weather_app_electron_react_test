@@ -35,8 +35,9 @@
     position: absolute;
     top: 2%;
     left: 3%;
-    width: 42px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
+    padding: 5px 5px;
 }
 .open-menu-button:hover {
     background-color: rgb(180, 180, 180);

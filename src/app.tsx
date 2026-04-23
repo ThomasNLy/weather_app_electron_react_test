@@ -11,7 +11,8 @@ import { WEATHERCODES, ISOFormatTimeZoneOffset } from "./utilities";
 import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
 import buttonLeftIcon from "./assets/button_icons/button_left.svg";
 import buttonRightIcon from "./assets/button_icons/button_right.svg";
-import hamburgerMenuButtonIcon from "./assets/button_icons/hamburger_menu_button.svg";
+import searchMenuButtonIcon from "./assets/button_icons/search_icon_white.svg";
+import savedCitiesMenuButtonIcon from "./assets/button_icons/location_icon_white.svg";
 const root = createRoot(document.body);
 root.render(<App />);
 
@@ -32,7 +33,7 @@ function App() {
 
     const [currentCityGeoData, setCurrentCityGeoData] = useState<IGeoCoordinatesData>(temp);
 
-    const [menuOpen, setMenuOpen] = useState<boolean>(true);
+    const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -117,8 +118,8 @@ function App() {
                     <button className="open-menu-button" onClick={() => setMenuOpen(true)}>
                         <img
                             className="button-svg-icon"
-                            src={hamburgerMenuButtonIcon}
-                            alt="hamburger menu button"
+                            src={searchMenuButtonIcon}
+                            alt="search menu button"
                         />
                     </button>
                 )}

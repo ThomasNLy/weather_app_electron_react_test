@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="_Image1_" serif:id="_Image1" transform="matrix(1,0,0,1,2,1)">
+        <use xlink:href="#_Image1" x="0" y="0" width="26px" height="29px"/>
+    </g>
+    <g id="Layer1">
+        <g transform="matrix(1,0,0,18,0,-153)">
+            <rect x="6" y="9" width="1" height="1"/>
+        </g>
+        <g transform="matrix(1,0,0,16,3,-134)">
+            <rect x="6" y="9" width="1" height="1"/>
+        </g>
+        <g transform="matrix(1,0,0,16,7,-134)">
+            <rect x="6" y="9" width="1" height="1"/>
+        </g>
+        <g transform="matrix(1,0,0,16,12,-134)">
+            <rect x="6" y="9" width="1" height="1"/>
+        </g>
+        <g transform="matrix(1,0,0,16,16,-134)">
+            <rect x="6" y="9" width="1" height="1"/>
+        </g>
+        <g transform="matrix(0.5,0,0,1,-4.5,-2)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(8,0,0,0.5,-176,13.5)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(0.5,0,0,0.5,12.5,12.5)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(0.5,0,0,9,13.5,-252)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(0.5,0,0,1,-5.5,-25)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(9,0,0,0.5,-200,-10.5)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(6,0,0,0.5,-128,-12.5)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(0.5,0,0,0.5,10.5,-11.5)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(0.5,0,0,0.5,-2.5,-11.5)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(11,0,0,0.5,-248,-6.5)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(0.5,0,0,1,14.5,-23)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(0.5,0,0,1,-6.5,-23)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+        <g transform="matrix(0.5,0,0,1,13.5,-25)">
+            <rect x="23" y="29" width="2" height="2"/>
+        </g>
+    </g>
+    <defs>
+        <image id="_Image1" width="26px" height="29px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAdCAYAAAC0T3x2AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAoklEQVRIie2WQQ6FIAxEBxfmn4+DziU4Dhf4+Zu6MaZW/EgEVp2VNE0fIyQDMEnhQY/0mFkDCcknmzkUY5TSXF34APii3UFNQYNWAL/9u9nFnbQ7O7AbxMKWnkP/6eJoFKf0m4acUUlCEiSB3WFprftNTXLOp34AGHJGKaVLbdplcJCDHOQgB00E2dA61ip/gsmnpnfd65S16XoLegOpzB6rDQvIPI5mRqTaAAAAAElFTkSuQmCC"/>
+    </defs>
+</svg>

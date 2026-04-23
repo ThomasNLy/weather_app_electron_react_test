@@ -3,7 +3,7 @@ import CityCard from "./CityCard";
 import "./Menu.css";
 import { IGeoCoordinatesData } from "../typings";
 import closeMenuButtonIcon from "../assets/button_icons/close_menu_button.svg";
-import searchButtonIcon from "../assets/button_icons/search_button.svg";
+import searchButtonIcon from "../assets/button_icons/search_icon_black.svg";
 interface IMenuProps {
     handleCloseMenuCallBackFunction: (newVal: boolean) => void;
     handleSearchCityCallBackFunction: (cityName: string) => Promise<IGeoCoordinatesData[] | null>;

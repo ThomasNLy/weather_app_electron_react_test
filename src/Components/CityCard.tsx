@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IGeoCoordinatesData, ILocationData } from "../typings";
+import { IGeoCoordinatesData } from "../typings";
 import "./CityCard.css";
 interface ICityCardProps {
     cityName: string;
