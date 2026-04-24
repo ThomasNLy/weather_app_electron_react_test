@@ -90,6 +90,23 @@
     grid-template-columns: 1fr;
     margin-top: 3em;
 }
+.search-city-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 0.5em;
+    align-items: center;
+}
+.add-city-button {
+    background: none;
+    border: none;
+    width: 46px;
+    height: 46px;
+    padding: 15px 15px;
+}
+.add-city-button:hover {
+    background-color: rgb(180, 180, 180);
+    border-radius: 5px;
+}
 @media screen and (min-width: 700px) {
     .menu {
         width: 35%;

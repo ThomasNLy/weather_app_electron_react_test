@@ -1,6 +1,7 @@
 .city-card {
     background-color: var(--white-colour);
-    border-radius: 1%;
+
+    border-radius: 5px;
     border-color: var(--pale-grey-colour);
     border-width: 2px;
     border-style: solid;

@@ -2,30 +2,33 @@ import React, { useState } from "react";
 import CityCard from "./CityCard";
 import "./SavedCitiesMenu.css";
 import { IGeoCoordinatesData } from "../typings";
-import closeMenuButtonIcon from "../assets/button_icons/close_menu_button.svg";
+import closeMenuButtonIcon from "../assets/button_icons/close_menu_button_icon.svg";
 import trashButtonIcon from "../assets/button_icons/trash_can_pixel2.svg";
+
 interface ISavedCitiesMenuProps {
     handleSetMenuOpenCallBackFunction: (newVal: boolean) => void;
-    handleSetCurrentCityCallBackFunction: (geoData: IGeoCoordinatesData) => void;
+    handleSetCurrentCityCallBackFunction: (geoCoordinatesData: IGeoCoordinatesData) => void;
+    handleDeleteFromSavedCitiesListCallBackFunction: (cityGeoData: IGeoCoordinatesData) => void;
     savedCitiesList: IGeoCoordinatesData[];
 }
 export default function SavedCitiesMenu({
     handleSetMenuOpenCallBackFunction,
     handleSetCurrentCityCallBackFunction,
+    handleDeleteFromSavedCitiesListCallBackFunction,
     savedCitiesList,
 }: ISavedCitiesMenuProps) {
-    const handleSetCurrentCityOnClick = (geoData: IGeoCoordinatesData) => {
-        handleSetCurrentCityCallBackFunction(geoData);
+    const handleSetCurrentCityOnClick = (geoCoordinates: IGeoCoordinatesData) => {
+        handleSetCurrentCityCallBackFunction(geoCoordinates);
         handleSetMenuOpenCallBackFunction(false);
-    };
-
-    const handleRemoveCityOnClick = () => {
-        //pass some function from parent component that handles it here
     };
 
     let cityCards =
         savedCitiesList.length > 0 ? (
-            createCityCards(savedCitiesList, handleSetCurrentCityOnClick)
+            createCityCards(
+                savedCitiesList,
+                handleSetCurrentCityOnClick,
+                handleDeleteFromSavedCitiesListCallBackFunction,
+            )
         ) : (
             <p className="no-city-found-text">no cities saved</p>
         );
@@ -52,6 +55,7 @@ export default function SavedCitiesMenu({
 function createCityCards(
     locations: IGeoCoordinatesData[],
     handleSetCurrentCityFunction: (geoData: IGeoCoordinatesData) => void,
+    handleDeleteFromSavedCitiesListFunction: (cityGeoData: IGeoCoordinatesData) => void,
 ) {
     let cityCards = [];
     for (let i = 0; i < locations.length; i++) {
@@ -59,6 +63,7 @@ function createCityCards(
         cityCards.push(
             <div className="saved-city-card">
                 <CityCard
+                    key={`${city.latitude}_${city.longitude}`}
                     cityName={city.city}
                     adminRegion={city.adminRegion}
                     countryName={city.country}
@@ -66,7 +71,11 @@ function createCityCards(
                     longitude={city.longitude}
                     setCurrentCityFunctionOnClick={handleSetCurrentCityFunction}
                 />
-                <button type="button" className="button-svg-icon delete-button">
+                <button
+                    type="button"
+                    className="button-svg-icon delete-city-button"
+                    onClick={() => handleDeleteFromSavedCitiesListFunction(city)}
+                >
                     <img src={trashButtonIcon} alt="trash button" />
                 </button>
             </div>,

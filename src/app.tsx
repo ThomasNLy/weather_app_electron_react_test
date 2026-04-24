@@ -26,8 +26,8 @@ function App() {
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // fake loading screen for UX
     let temp: IGeoCoordinatesData = {
-        latitude: 43.7064,
-        longitude: -79.3986,
+        latitude: 43.70643,
+        longitude: -79.39864,
         city: "Toronto",
         adminRegion: "Ontario",
         country: "Canada",
@@ -35,8 +35,8 @@ function App() {
 
     const [currentCityGeoData, setCurrentCityGeoData] = useState<IGeoCoordinatesData>(temp);
     const [savedCitiesDataList, setSavedCitiesDataList] = useState<IGeoCoordinatesData[]>([temp]);
-    const [searchCityMenuOpen, setSearchCityMenuOpen] = useState<boolean>(false);
-    const [savedCitiesMenuOpen, setSavedCitiesMenuOpen] = useState<boolean>(true);
+    const [searchCityMenuOpen, setSearchCityMenuOpen] = useState<boolean>(true);
+    const [savedCitiesMenuOpen, setSavedCitiesMenuOpen] = useState<boolean>(false);
 
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -80,7 +80,7 @@ function App() {
             longitude: geoCoordinatesData.longitude,
         };
         console.log(currentCityGeoData === cityGeoData);
-        addNewCityToSavedCitiesList(cityGeoData);
+
         setCurrentCityGeoData(cityGeoData);
 
         setIsLoading(true);
@@ -107,6 +107,21 @@ function App() {
         });
     }
 
+    //--------------delete city from list of saved cities----------------
+    function deleteSelectCityFromSavedCitiesList(cityGeoData: IGeoCoordinatesData) {
+        const newList = savedCitiesDataList.filter((_cityGeoData: IGeoCoordinatesData) => {
+            if (
+                _cityGeoData.latitude === cityGeoData.latitude &&
+                _cityGeoData.longitude === cityGeoData.longitude
+            ) {
+                return false; //if false remove from list
+            } else {
+                return true; //true means keep
+            }
+        });
+        setSavedCitiesDataList(newList);
+    }
+    console.log(savedCitiesDataList);
     //--------------------------------------------------------------------
     function currentMenu() {
         if (searchCityMenuOpen) {
@@ -115,6 +130,7 @@ function App() {
                     handleSetMenuOpenCallBackFunction={setSearchCityMenuOpen}
                     handleSearchCityCallBackFunction={getLocationData}
                     handleSetCurrentCityCallBackFunction={handleSetCurrentCityFunction}
+                    handleSaveSelectedCityToListCallBackFunction={addNewCityToSavedCitiesList}
                 />
             );
         } else if (savedCitiesMenuOpen) {
@@ -122,6 +138,9 @@ function App() {
                 <SavedCitiesMenu
                     handleSetMenuOpenCallBackFunction={setSavedCitiesMenuOpen}
                     handleSetCurrentCityCallBackFunction={handleSetCurrentCityFunction}
+                    handleDeleteFromSavedCitiesListCallBackFunction={
+                        deleteSelectCityFromSavedCitiesList
+                    }
                     savedCitiesList={savedCitiesDataList}
                 />
             );

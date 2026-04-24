@@ -2,17 +2,21 @@ import React, { useState, useCallback } from "react";
 import CityCard from "./CityCard";
 import "./SearchCityMenu.css";
 import { IGeoCoordinatesData } from "../typings";
-import closeMenuButtonIcon from "../assets/button_icons/close_menu_button.svg";
+import closeMenuButtonIcon from "../assets/button_icons/close_menu_button_icon.svg";
 import searchButtonIcon from "../assets/button_icons/search_icon_black.svg";
+import addButtonIcon from "../assets/button_icons/add_button_icon.svg";
+
 interface ISearchCityMenuProps {
     handleSetMenuOpenCallBackFunction: (newVal: boolean) => void;
     handleSearchCityCallBackFunction: (cityName: string) => Promise<IGeoCoordinatesData[] | null>;
     handleSetCurrentCityCallBackFunction: (geoData: IGeoCoordinatesData) => void;
+    handleSaveSelectedCityToListCallBackFunction: (cityGeoData: IGeoCoordinatesData) => void;
 }
 export default function SearchCityMenu({
     handleSetMenuOpenCallBackFunction,
     handleSearchCityCallBackFunction,
     handleSetCurrentCityCallBackFunction,
+    handleSaveSelectedCityToListCallBackFunction,
 }: ISearchCityMenuProps) {
     const [locations, setLocations] = useState<IGeoCoordinatesData[] | null>(null);
 
@@ -45,7 +49,11 @@ export default function SearchCityMenu({
 
     let cityCards =
         locations != null ? (
-            createCityCards(locations, handleSetCurrentCityOnClick)
+            createCityCards(
+                locations,
+                handleSetCurrentCityOnClick,
+                handleSaveSelectedCityToListCallBackFunction,
+            )
         ) : (
             <p className="no-city-found-text">no city found</p>
         );
@@ -90,19 +98,33 @@ export default function SearchCityMenu({
 function createCityCards(
     locations: IGeoCoordinatesData[],
     handleSetCurrentCityFunctionOnClick: (geoData: IGeoCoordinatesData) => void,
+    handleSaveSelectedCityToListFunctionOnClick: (cityGeoData: IGeoCoordinatesData) => void,
 ) {
     let cityCards = [];
     for (let i = 0; i < locations.length; i++) {
         let city = locations[i];
         cityCards.push(
-            <CityCard
-                cityName={city.city}
-                adminRegion={city.adminRegion}
-                countryName={city.country}
-                latitude={city.latitude}
-                longitude={city.longitude}
-                setCurrentCityFunctionOnClick={handleSetCurrentCityFunctionOnClick}
-            />,
+            <div className="search-city-card">
+                <CityCard
+                    key={`${city.latitude}_${city.longitude}`}
+                    cityName={city.city}
+                    adminRegion={city.adminRegion}
+                    countryName={city.country}
+                    latitude={city.latitude}
+                    longitude={city.longitude}
+                    setCurrentCityFunctionOnClick={handleSetCurrentCityFunctionOnClick}
+                />
+                <button
+                    type="button"
+                    className="add-city-button"
+                    onClick={() => {
+                        handleSaveSelectedCityToListFunctionOnClick(city);
+                        handleSetCurrentCityFunctionOnClick(city);
+                    }}
+                >
+                    <img src={addButtonIcon} alt="add button" />
+                </button>
+            </div>,
         );
     }
     return cityCards;

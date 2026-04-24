@@ -43,21 +43,21 @@
 }
 
 .saved-city-card {
-    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 0.5em;
 }
-.delete-button {
+.delete-city-button {
     background: none;
     border: none;
-
-    width: 54px;
-    height: 54px;
-    padding: 15px 15px;
-    position: absolute;
-    right: 0%;
-    top: 0%;
+    width: 46px;
+    height: 46px;
+    padding: 10px 10px;
 }
-.delete-button:hover {
+.delete-city-button:hover {
     background-color: rgb(180, 180, 180);
+    border-radius: 5px;
 }
 
 @media screen and (min-width: 700px) {
