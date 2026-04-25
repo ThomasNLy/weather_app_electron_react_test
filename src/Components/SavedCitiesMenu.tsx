@@ -10,12 +10,14 @@ interface ISavedCitiesMenuProps {
     handleSetCurrentCityCallBackFunction: (geoCoordinatesData: IGeoCoordinatesData) => void;
     handleDeleteFromSavedCitiesListCallBackFunction: (cityGeoData: IGeoCoordinatesData) => void;
     savedCitiesList: IGeoCoordinatesData[];
+    defaultCity: IGeoCoordinatesData;
 }
 export default function SavedCitiesMenu({
     handleSetMenuOpenCallBackFunction,
     handleSetCurrentCityCallBackFunction,
     handleDeleteFromSavedCitiesListCallBackFunction,
     savedCitiesList,
+    defaultCity,
 }: ISavedCitiesMenuProps) {
     const handleSetCurrentCityOnClick = (geoCoordinates: IGeoCoordinatesData) => {
         handleSetCurrentCityCallBackFunction(geoCoordinates);
@@ -25,6 +27,7 @@ export default function SavedCitiesMenu({
     let cityCards =
         savedCitiesList.length > 0 ? (
             createCityCards(
+                defaultCity,
                 savedCitiesList,
                 handleSetCurrentCityOnClick,
                 handleDeleteFromSavedCitiesListCallBackFunction,
@@ -53,6 +56,7 @@ export default function SavedCitiesMenu({
 }
 
 function createCityCards(
+    defaultCity: IGeoCoordinatesData,
     locations: IGeoCoordinatesData[],
     handleSetCurrentCityFunction: (geoData: IGeoCoordinatesData) => void,
     handleDeleteFromSavedCitiesListFunction: (cityGeoData: IGeoCoordinatesData) => void,
@@ -60,10 +64,12 @@ function createCityCards(
     let cityCards = [];
     for (let i = 0; i < locations.length; i++) {
         let city = locations[i];
+        let isDefaultCity =
+            city.latitude === defaultCity.latitude && city.longitude === defaultCity.longitude;
+        console.log(isDefaultCity);
         cityCards.push(
-            <div className="saved-city-card">
+            <div className="saved-city-card" key={`${city.latitude}_${city.longitude}`}>
                 <CityCard
-                    key={`${city.latitude}_${city.longitude}`}
                     cityName={city.city}
                     adminRegion={city.adminRegion}
                     countryName={city.country}
@@ -71,9 +77,10 @@ function createCityCards(
                     longitude={city.longitude}
                     setCurrentCityFunctionOnClick={handleSetCurrentCityFunction}
                 />
+
                 <button
                     type="button"
-                    className="button-svg-icon delete-city-button"
+                    className={`button-svg-icon delete-city-button ${isDefaultCity ? "hide-delete-city-button" : ""}`}
                     onClick={() => handleDeleteFromSavedCitiesListFunction(city)}
                 >
                     <img src={trashButtonIcon} alt="trash button" />

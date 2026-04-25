@@ -104,9 +104,8 @@ function createCityCards(
     for (let i = 0; i < locations.length; i++) {
         let city = locations[i];
         cityCards.push(
-            <div className="search-city-card">
+            <div className="search-city-card" key={`${city.latitude}_${city.longitude}`}>
                 <CityCard
-                    key={`${city.latitude}_${city.longitude}`}
                     cityName={city.city}
                     adminRegion={city.adminRegion}
                     countryName={city.country}

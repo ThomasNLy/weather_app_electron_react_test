@@ -59,6 +59,9 @@
     background-color: rgb(180, 180, 180);
     border-radius: 5px;
 }
+.hide-delete-city-button {
+    visibility: hidden;
+}
 
 @media screen and (min-width: 700px) {
     .menu {

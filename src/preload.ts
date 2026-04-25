@@ -6,4 +6,5 @@ contextBridge.exposeInMainWorld("mainProcess", {
     getWeatherData: (latitude: number, longitude: number) =>
         ipcRenderer.invoke("get-weather-data", latitude, longitude),
     getLocationData: (cityName: string) => ipcRenderer.invoke("get-location-data", cityName),
+    getDefaultLocation: () => ipcRenderer.invoke("get-default-location"),
 });

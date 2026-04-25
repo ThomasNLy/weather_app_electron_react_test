@@ -67,6 +67,9 @@ ipcMain.handle("get-location-data", async (event, cityName: string) => {
 
     return await fetchGeoLocationData(cityName);
 });
+ipcMain.handle("get-default-location", async () => {
+    return await getDefaultLocation();
+});
 
 import path from "path";
 import dotenv from "dotenv";
@@ -93,7 +96,7 @@ const weatherAPIKeyForecastParameters = process.env.WEATHER_API_FORECAST_PARAMET
 const geoAPIKey = process.env.GEO_API as string;
 const geoAPIKeyParameters = process.env.GEO_API_PARAMETERS as string;
 
-async function fetchWeather(latitude: number, longitude: number) {
+async function fetchWeather(latitude: number, longitude: number): Promise<IWeatherAPIResponse> {
     try {
         if (
             weatherDataCache.data == null ||
@@ -102,10 +105,9 @@ async function fetchWeather(latitude: number, longitude: number) {
                 geoCoordinatesCache.longitude !== longitude)
         ) {
             console.log("fresh api pull");
-            console.log(Date.now() - weatherDataCache.timeStamp);
+            // console.log(Date.now() - weatherDataCache.timeStamp);
             const configuredWeatherAPIKey: string = `${weatherAPIKey}${weatherAPIKeyLatitudeParameter}${latitude}${weatherAPIKeyLongitudeParameter}${longitude}${weatherAPIKeyForecastParameters}`;
 
-            console.log(configuredWeatherAPIKey);
             const response = await fetch(configuredWeatherAPIKey);
 
             if (!response.ok) {
@@ -161,7 +163,7 @@ async function fetchWeather(latitude: number, longitude: number) {
         return apiResponse;
     }
 }
-async function fetchGeoLocationData(cityName: string) {
+async function fetchGeoLocationData(cityName: string): Promise<IGeoAPIResponse | null> {
     try {
         if (cityName.length > 2) {
             const configuredGeoAPIKey = `${geoAPIKey}${cityName}${geoAPIKeyParameters}`;
@@ -192,6 +194,21 @@ async function fetchGeoLocationData(cityName: string) {
         console.log("Error fetching data: ", error);
         return null;
     }
+}
+
+async function getDefaultLocation(): Promise<IGeoCoordinatesData> {
+    //change it to read from a file later and will need await later
+    let defaultLoc: IGeoCoordinatesData = {
+        city: "Toronto",
+        adminRegion: "Ontario",
+        country: "Canada",
+        latitude: 43.70643,
+        longitude: -79.39864,
+    };
+    return defaultLoc;
+}
+function setDefaultLocation(newDefault: IGeoCoordinatesData) {
+    //code here for setting the newDefaultCity
 }
 
 function configureAPIKeys() {

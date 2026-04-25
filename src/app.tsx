@@ -21,28 +21,33 @@ root.render(<App />);
 function App() {
     console.log("Width: " + window.innerWidth);
     console.log("Height: " + window.innerHeight);
-
+    const [isSettingUp, setIsSettingUp] = useState<boolean>(true);
     const [weatherData, setWeatherData] = useState<IWeatherData | null>(null);
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // fake loading screen for UX
-    let temp: IGeoCoordinatesData = {
-        latitude: 43.70643,
-        longitude: -79.39864,
-        city: "Toronto",
-        adminRegion: "Ontario",
-        country: "Canada",
-    };
 
-    const [currentCityGeoData, setCurrentCityGeoData] = useState<IGeoCoordinatesData>(temp);
-    const [savedCitiesDataList, setSavedCitiesDataList] = useState<IGeoCoordinatesData[]>([temp]);
+    const [defaultCity, setDefaultCity] = useState<IGeoCoordinatesData>();
+    const [currentCityGeoData, setCurrentCityGeoData] = useState<IGeoCoordinatesData | null>();
+    const [savedCitiesDataList, setSavedCitiesDataList] = useState<IGeoCoordinatesData[]>([]);
     const [searchCityMenuOpen, setSearchCityMenuOpen] = useState<boolean>(true);
     const [savedCitiesMenuOpen, setSavedCitiesMenuOpen] = useState<boolean>(false);
+    let initApp = async () => {
+        const defaultCity = await window.mainProcess.getDefaultLocation();
+        setCurrentCityGeoData(defaultCity);
+        setSavedCitiesDataList([defaultCity]);
+        setDefaultCity(defaultCity);
+        setIsSettingUp(false);
+    };
+    useEffect(() => {
+        initApp();
+    }, []);
 
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
+        if (isSettingUp) return;
         const apiCall: Promise<IWeatherAPIResponse> = window.mainProcess.getWeatherData(
-            currentCityGeoData.latitude,
-            currentCityGeoData.longitude,
+            currentCityGeoData!.latitude,
+            currentCityGeoData!.longitude,
         );
 
         const delayTimer: Promise<any> = new Promise((resolve) => setTimeout(resolve, 1200));
@@ -68,7 +73,7 @@ function App() {
                 setConnectionStatus(false);
                 setIsLoading(false);
             });
-    }, [currentCityGeoData]);
+    }, [currentCityGeoData, isSettingUp]);
 
     //------------------------set current city function-----------------------
     const handleSetCurrentCityFunction = useCallback((geoCoordinatesData: IGeoCoordinatesData) => {
@@ -79,7 +84,6 @@ function App() {
             latitude: geoCoordinatesData.latitude,
             longitude: geoCoordinatesData.longitude,
         };
-        console.log(currentCityGeoData === cityGeoData);
 
         setCurrentCityGeoData(cityGeoData);
 
@@ -96,8 +100,6 @@ function App() {
                 ) {
                     notInList = false;
                 }
-                console.log(notInList);
-                console.log(cityData);
             });
             if (notInList && currentList.length < 5) {
                 return [...currentList, newCityGeoData];
@@ -121,7 +123,7 @@ function App() {
         });
         setSavedCitiesDataList(newList);
     }
-    console.log(savedCitiesDataList);
+
     //--------------------------------------------------------------------
     function currentMenu() {
         if (searchCityMenuOpen) {
@@ -142,6 +144,7 @@ function App() {
                         deleteSelectCityFromSavedCitiesList
                     }
                     savedCitiesList={savedCitiesDataList}
+                    defaultCity={defaultCity!}
                 />
             );
         } else {

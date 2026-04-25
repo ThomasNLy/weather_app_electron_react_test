@@ -21,9 +21,25 @@ declare global {
          * @property {Promise<IGeoAPIResponse>} ```getLocationData(string)``` - The promise object returned representing
          * api response an array of location data based on the city name argument passed as a string
          * @see {@link IGeoAPIResponse}
-         * @return {IGeoAPIResponse} JSON object holding an array of JSON objects with location data
+         * @return {IGeoAPIResponse} JSON object holding an array of JSON objects with location data wrapped in a Promise Object
          */
         getLocationData: (cityName: string) => Promise<IGeoAPIResponse>;
+        /**
+         * @property {Promise<IGeoCoordinatesData} ```getDefaultLocation()``` - the promise object returned representing
+         * the default location as a json object
+         * @see {@link IGeoCoordinatesData}
+         * @returns {IGeoCoordinatesData} JSON object representing the default location for weather data wrapped in a Promise Object
+         * @example
+         * {
+         *   city: string;
+         *   adminRegion: string;
+         *   country: string;
+         *   latitude: number;
+         *   longitude: number;
+         * }
+         * promise object
+         */
+        getDefaultLocation: () => Promise<IGeoCoordinatesData>;
     }
 
     //merging with built in Window interface with new property added
