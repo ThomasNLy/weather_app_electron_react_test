@@ -9,6 +9,7 @@ interface ISavedCitiesMenuProps {
     handleSetMenuOpenCallBackFunction: (newVal: boolean) => void;
     handleSetCurrentCityCallBackFunction: (geoCoordinatesData: IGeoCoordinatesData) => void;
     handleDeleteFromSavedCitiesListCallBackFunction: (cityGeoData: IGeoCoordinatesData) => void;
+    handleSetDefaultCityCallBackFunction: (newDefaultCity: IGeoCoordinatesData) => void;
     savedCitiesList: IGeoCoordinatesData[];
     defaultCity: IGeoCoordinatesData;
 }
@@ -16,6 +17,7 @@ export default function SavedCitiesMenu({
     handleSetMenuOpenCallBackFunction,
     handleSetCurrentCityCallBackFunction,
     handleDeleteFromSavedCitiesListCallBackFunction,
+    handleSetDefaultCityCallBackFunction,
     savedCitiesList,
     defaultCity,
 }: ISavedCitiesMenuProps) {
@@ -31,6 +33,7 @@ export default function SavedCitiesMenu({
                 savedCitiesList,
                 handleSetCurrentCityOnClick,
                 handleDeleteFromSavedCitiesListCallBackFunction,
+                handleSetDefaultCityCallBackFunction,
             )
         ) : (
             <p className="no-city-found-text">no cities saved</p>
@@ -60,6 +63,7 @@ function createCityCards(
     locations: IGeoCoordinatesData[],
     handleSetCurrentCityFunction: (geoData: IGeoCoordinatesData) => void,
     handleDeleteFromSavedCitiesListFunction: (cityGeoData: IGeoCoordinatesData) => void,
+    handleSetDefaultCityFunction: (newDefaultCity: IGeoCoordinatesData) => void,
 ) {
     let cityCards = [];
     for (let i = 0; i < locations.length; i++) {
@@ -77,7 +81,13 @@ function createCityCards(
                     longitude={city.longitude}
                     setCurrentCityFunctionOnClick={handleSetCurrentCityFunction}
                 />
-
+                <button
+                    type="button"
+                    className={`button-svg-icon delete-city-button`}
+                    onClick={() => handleSetDefaultCityFunction(city)}
+                >
+                    Set Default Location
+                </button>
                 <button
                     type="button"
                     className={`button-svg-icon delete-city-button ${isDefaultCity ? "hide-delete-city-button" : ""}`}

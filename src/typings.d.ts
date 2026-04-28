@@ -40,6 +40,7 @@ declare global {
          * promise object
          */
         getDefaultLocation: () => Promise<IGeoCoordinatesData>;
+        setDefaultLocation: (newDefaultCity: IGeoCoordinatesData) => void;
     }
 
     //merging with built in Window interface with new property added

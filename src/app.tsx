@@ -124,6 +124,12 @@ function App() {
         setSavedCitiesDataList(newList);
     }
 
+    //--------------------set default city--------------
+    const handleSetDefaultCityFunction = useCallback((newDefaultCity: IGeoCoordinatesData) => {
+        setDefaultCity(newDefaultCity);
+        window.mainProcess.setDefaultLocation(newDefaultCity);
+    }, []);
+
     //--------------------------------------------------------------------
     function currentMenu() {
         if (searchCityMenuOpen) {
@@ -143,6 +149,7 @@ function App() {
                     handleDeleteFromSavedCitiesListCallBackFunction={
                         deleteSelectCityFromSavedCitiesList
                     }
+                    handleSetDefaultCityCallBackFunction={handleSetDefaultCityFunction}
                     savedCitiesList={savedCitiesDataList}
                     defaultCity={defaultCity!}
                 />
@@ -197,7 +204,7 @@ function App() {
                 {menu}
                 <div className="app-main-content">
                     <h1 className="current-city-header content-header">
-                        {`${currentCityGeoData.city}, ${currentCityGeoData.country}`}
+                        {`${currentCityGeoData!.city}, ${currentCityGeoData!.country}`}
                     </h1>
                     <CurrentDayWeatherBanner
                         unit={weatherData!.units.temperature}

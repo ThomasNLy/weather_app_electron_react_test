@@ -44,7 +44,7 @@
 
 .saved-city-card {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
     column-gap: 0.5em;
 }

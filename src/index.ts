@@ -71,6 +71,10 @@ ipcMain.handle("get-default-location", async () => {
     return await getDefaultLocation();
 });
 
+ipcMain.on("set-default-location", (event, newDefaultCity: IGeoCoordinatesData) => {
+    setDefaultLocation(newDefaultCity);
+});
+
 import path from "path";
 import dotenv from "dotenv";
 import { IWeatherData, IWeatherAPIResponse, IGeoAPIResponse, IGeoCoordinatesData } from "./typings";
@@ -83,6 +87,14 @@ let weatherDataCache: { data: IWeatherData | null; timeStamp: number } = {
 let geoCoordinatesCache = {
     latitude: 0,
     longitude: 0,
+};
+
+let defaultLoc: IGeoCoordinatesData = {
+    city: "Toronto",
+    adminRegion: "Ontario",
+    country: "Canada",
+    latitude: 43.70643,
+    longitude: -79.39864,
 };
 
 const CACHE_DURATION = 30 * 60 * 1000;
@@ -198,17 +210,13 @@ async function fetchGeoLocationData(cityName: string): Promise<IGeoAPIResponse |
 
 async function getDefaultLocation(): Promise<IGeoCoordinatesData> {
     //change it to read from a file later and will need await later
-    let defaultLoc: IGeoCoordinatesData = {
-        city: "Toronto",
-        adminRegion: "Ontario",
-        country: "Canada",
-        latitude: 43.70643,
-        longitude: -79.39864,
-    };
+
     return defaultLoc;
 }
 function setDefaultLocation(newDefault: IGeoCoordinatesData) {
     //code here for setting the newDefaultCity
+    console.log(newDefault);
+    defaultLoc = newDefault;
 }
 
 function configureAPIKeys() {
