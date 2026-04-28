@@ -83,7 +83,7 @@ function createCityCards(
                 />
                 <button
                     type="button"
-                    className={`button-svg-icon delete-city-button`}
+                    className={`button-svg-icon delete-city-button ${isDefaultCity ? "hide-delete-city-button" : ""}`}
                     onClick={() => handleSetDefaultCityFunction(city)}
                 >
                     Set Default Location

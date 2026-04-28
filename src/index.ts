@@ -71,23 +71,27 @@ ipcMain.handle("get-default-location", async () => {
     return await getDefaultLocation();
 });
 
+ipcMain.handle("get-saved-locations-list", async () => {
+    return await getListOfSavedLocations();
+});
+
 ipcMain.on("set-default-location", (event, newDefaultCity: IGeoCoordinatesData) => {
     setDefaultLocation(newDefaultCity);
+});
+
+ipcMain.on("set-saved-locations-list", (event, locationsList: IGeoCoordinatesData[]) => {
+    setListOfSavedLocations(locationsList);
 });
 
 import path from "path";
 import dotenv from "dotenv";
 import { IWeatherData, IWeatherAPIResponse, IGeoAPIResponse, IGeoCoordinatesData } from "./typings";
-
-let weatherDataCache: { data: IWeatherData | null; timeStamp: number } = {
-    data: null,
-    timeStamp: 0,
-};
-
-let geoCoordinatesCache = {
-    latitude: 0,
-    longitude: 0,
-};
+interface IWeatherDataCache {
+    geoCoordinates: { latitude: number; longitude: number };
+    weatherData: IWeatherData;
+    timeStamp: number;
+}
+let weatherDataCache: IWeatherDataCache[] = [];
 
 let defaultLoc: IGeoCoordinatesData = {
     city: "Toronto",
@@ -96,6 +100,7 @@ let defaultLoc: IGeoCoordinatesData = {
     latitude: 43.70643,
     longitude: -79.39864,
 };
+let savedLocationsList: IGeoCoordinatesData[] = [defaultLoc, defaultLoc];
 
 const CACHE_DURATION = 30 * 60 * 1000;
 
@@ -109,12 +114,15 @@ const geoAPIKey = process.env.GEO_API as string;
 const geoAPIKeyParameters = process.env.GEO_API_PARAMETERS as string;
 
 async function fetchWeather(latitude: number, longitude: number): Promise<IWeatherAPIResponse> {
+    const cachedWeatherData = weatherDataCache.find(
+        (data: IWeatherDataCache) =>
+            data.geoCoordinates.latitude === latitude &&
+            data.geoCoordinates.longitude === longitude,
+    );
     try {
         if (
-            weatherDataCache.data == null ||
-            Date.now() - weatherDataCache.timeStamp > CACHE_DURATION ||
-            (geoCoordinatesCache.latitude !== latitude &&
-                geoCoordinatesCache.longitude !== longitude)
+            cachedWeatherData == undefined ||
+            Date.now() - cachedWeatherData.timeStamp > CACHE_DURATION
         ) {
             console.log("fresh api pull");
             // console.log(Date.now() - weatherDataCache.timeStamp);
@@ -145,9 +153,12 @@ async function fetchWeather(latitude: number, longitude: number): Promise<IWeath
                 dailyMinApparentTemp: data.daily.apparent_temperature_min,
                 precipitationChance: data.daily.precipitation_probability_max,
             };
-            geoCoordinatesCache = { latitude: latitude, longitude: longitude };
-            weatherDataCache.data = weatherData;
-            weatherDataCache.timeStamp = Date.now();
+            let newEntry: IWeatherDataCache = {
+                geoCoordinates: { latitude: latitude, longitude: longitude },
+                weatherData: weatherData,
+                timeStamp: Date.now(),
+            };
+            weatherDataCache.push(newEntry);
             let apiResponse: IWeatherAPIResponse = {
                 status: true,
                 weatherData: weatherData,
@@ -160,7 +171,7 @@ async function fetchWeather(latitude: number, longitude: number): Promise<IWeath
             console.log(weatherDataCache);
             let apiResponse: IWeatherAPIResponse = {
                 status: true,
-                weatherData: weatherDataCache.data,
+                weatherData: cachedWeatherData.weatherData,
                 message: "success, connection made",
             };
             return apiResponse;
@@ -217,6 +228,16 @@ function setDefaultLocation(newDefault: IGeoCoordinatesData) {
     //code here for setting the newDefaultCity
     console.log(newDefault);
     defaultLoc = newDefault;
+}
+
+function setListOfSavedLocations(locationList: IGeoCoordinatesData[]) {
+    savedLocationsList = locationList;
+    console.log(savedLocationsList);
+}
+
+async function getListOfSavedLocations() {
+    //change to read from a file later and use await key word
+    return savedLocationsList;
 }
 
 function configureAPIKeys() {

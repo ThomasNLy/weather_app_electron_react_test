@@ -33,8 +33,10 @@ function App() {
     const [savedCitiesMenuOpen, setSavedCitiesMenuOpen] = useState<boolean>(false);
     let initApp = async () => {
         const defaultCity = await window.mainProcess.getDefaultLocation();
+        const savedLocations = await window.mainProcess.getListOfSavedLocations();
         setCurrentCityGeoData(defaultCity);
-        setSavedCitiesDataList([defaultCity]);
+        //setSavedCitiesDataList([defaultCity]);
+        setSavedCitiesDataList(savedLocations);
         setDefaultCity(defaultCity);
         setIsSettingUp(false);
     };
@@ -102,6 +104,7 @@ function App() {
                 }
             });
             if (notInList && currentList.length < 5) {
+                window.mainProcess.setListOfSavedLocations([...currentList, newCityGeoData]);
                 return [...currentList, newCityGeoData];
             } else {
                 return currentList;
@@ -121,6 +124,7 @@ function App() {
                 return true; //true means keep
             }
         });
+        window.mainProcess.setListOfSavedLocations(newList);
         setSavedCitiesDataList(newList);
     }
 

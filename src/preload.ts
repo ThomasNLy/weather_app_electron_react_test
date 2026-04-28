@@ -10,4 +10,7 @@ contextBridge.exposeInMainWorld("mainProcess", {
     getDefaultLocation: () => ipcRenderer.invoke("get-default-location"),
     setDefaultLocation: (newDefaultCity: IGeoCoordinatesData) =>
         ipcRenderer.send("set-default-location", newDefaultCity),
+    getListOfSavedLocations: () => ipcRenderer.invoke("get-saved-locations-list"),
+    setListOfSavedLocations: (locationsList: IGeoCoordinatesData[]) =>
+        ipcRenderer.send("set-saved-locations-list", locationsList),
 });
