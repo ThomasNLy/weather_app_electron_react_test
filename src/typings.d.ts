@@ -134,3 +134,8 @@ export interface IGeoCoordinatesData {
     latitude: number;
     longitude: number;
 }
+
+export interface ILocationsData {
+    defaultLocation: IGeoCoordinatesData;
+    savedLocations: IGeoCoordinatesData[];
+}

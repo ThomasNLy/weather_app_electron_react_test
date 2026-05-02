@@ -1,4 +1,4 @@
-.city-card {
+.location-card {
     background-color: var(--white-colour);
 
     border-radius: 5px;
@@ -15,15 +15,15 @@
     padding-left: 0.7em;
     grid-template-rows: auto;
 }
-.city-card:hover {
+.location-card:hover {
     background-color: rgb(180, 180, 180);
 }
-.city-card h1 {
+.location-card h1 {
     font-size: 20px;
     font-weight: 400;
     margin-block: 0;
 }
-.city-card p {
+.location-card p {
     font-size: 12px;
     font-weight: 400;
     margin-block: 0;

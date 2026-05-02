@@ -48,24 +48,40 @@
     align-items: center;
     column-gap: 0.5em;
 }
-.delete-city-button {
+.saved-loc-button {
     background: none;
     border: none;
     width: 46px;
     height: 46px;
     padding: 10px 10px;
 }
-.delete-city-button:hover {
+.saved-loc-button:hover {
     background-color: rgb(180, 180, 180);
     border-radius: 5px;
 }
-.hide-delete-city-button {
+.set-default-loc-button {
+    background: none;
+    border: none;
+    width: 100px;
+    height: 46px;
+    padding: 10px 10px;
+    line-height: 15px;
+}
+.delete-loc-button {
+    background: none;
+    border: none;
+    width: 46px;
+    height: 46px;
+    padding: 10px 10px;
+}
+
+.hide-saved-loc-menu-button {
     visibility: hidden;
 }
 
 @media screen and (min-width: 700px) {
     .menu {
-        width: 35%;
+        width: 45%;
         padding-left: 2%;
         padding-right: 2%;
     }
@@ -74,6 +90,9 @@
     }
 }
 @media screen and (min-width: 850px) {
+    .menu {
+        width: 40%;
+    }
     .close-menu-button {
         left: 87%;
     }
@@ -81,7 +100,7 @@
 
 @media screen and (min-width: 1200px) {
     .menu {
-        width: 20%;
+        width: 35%;
     }
     .close-menu-button {
         left: 85%;

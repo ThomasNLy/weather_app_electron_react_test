@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import { IGeoCoordinatesData } from "../typings";
-import "./CityCard.css";
-interface ICityCardProps {
+import "./LocationCard.css";
+interface ILocationCardProps {
     cityName: string;
     adminRegion: string;
     countryName: string;
     latitude: number;
     longitude: number;
-    setCurrentCityFunctionOnClick: (geoData: IGeoCoordinatesData) => void;
+    setCurrentLocationFunctionOnClick: (geoData: IGeoCoordinatesData) => void;
 }
 
-export default function CityCard({
+export default function LocationCard({
     cityName,
     adminRegion,
     countryName,
     latitude,
     longitude,
-    setCurrentCityFunctionOnClick,
-}: ICityCardProps) {
+    setCurrentLocationFunctionOnClick,
+}: ILocationCardProps) {
     let geoData: IGeoCoordinatesData = {
         latitude: latitude,
         longitude: longitude,
@@ -26,7 +26,7 @@ export default function CityCard({
         country: countryName,
     };
     return (
-        <div className="city-card" onClick={() => setCurrentCityFunctionOnClick(geoData)}>
+        <div className="location-card" onClick={() => setCurrentLocationFunctionOnClick(geoData)}>
             <h1>{cityName}</h1>
             <p>{`${adminRegion}, ${countryName}`}</p>
         </div>

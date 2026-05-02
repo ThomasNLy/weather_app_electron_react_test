@@ -6,6 +6,44 @@ import { ipcMain } from "electron";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
+import path from "path";
+import dotenv from "dotenv";
+import fs from "node:fs/promises";
+import {
+    IWeatherData,
+    IWeatherAPIResponse,
+    IGeoAPIResponse,
+    IGeoCoordinatesData,
+    ILocationsData,
+} from "./typings";
+interface IWeatherDataCache {
+    geoCoordinates: { latitude: number; longitude: number };
+    weatherData: IWeatherData;
+    timeStamp: number;
+}
+
+let weatherDataCache: IWeatherDataCache[] = [];
+
+let defaultLoc: IGeoCoordinatesData = {
+    city: "Tokyo",
+    adminRegion: "Tokyo",
+    country: "Japan",
+    latitude: 35.6895,
+    longitude: 139.6917,
+};
+let savedLocationsList: IGeoCoordinatesData[] = [];
+
+const CACHE_DURATION = 30 * 60 * 1000;
+
+const envPath = configureAPIKeys();
+dotenv.config({ path: envPath });
+const weatherAPIKey = process.env.WEATHER_API as string;
+const weatherAPIKeyLatitudeParameter = process.env.WEATHER_API_LATITUDE_PARAMETER as string;
+const weatherAPIKeyLongitudeParameter = process.env.WEATHER_API_LONGITUDE_PARAMETER as string;
+const weatherAPIKeyForecastParameters = process.env.WEATHER_API_FORECAST_PARAMETERS as string;
+const geoAPIKey = process.env.GEO_API as string;
+const geoAPIKeyParameters = process.env.GEO_API_PARAMETERS as string;
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
     app.quit();
@@ -30,6 +68,7 @@ const createWindow = (): void => {
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
     mainWindow.setMinimumSize(600, 650);
+    loadLocationData();
 };
 
 // This method will be called when Electron has finished
@@ -41,6 +80,7 @@ app.on("ready", createWindow);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
+    savelocationData();
     if (process.platform !== "darwin") {
         app.quit();
     }
@@ -82,36 +122,6 @@ ipcMain.on("set-default-location", (event, newDefaultCity: IGeoCoordinatesData) 
 ipcMain.on("set-saved-locations-list", (event, locationsList: IGeoCoordinatesData[]) => {
     setListOfSavedLocations(locationsList);
 });
-
-import path from "path";
-import dotenv from "dotenv";
-import { IWeatherData, IWeatherAPIResponse, IGeoAPIResponse, IGeoCoordinatesData } from "./typings";
-interface IWeatherDataCache {
-    geoCoordinates: { latitude: number; longitude: number };
-    weatherData: IWeatherData;
-    timeStamp: number;
-}
-let weatherDataCache: IWeatherDataCache[] = [];
-
-let defaultLoc: IGeoCoordinatesData = {
-    city: "Toronto",
-    adminRegion: "Ontario",
-    country: "Canada",
-    latitude: 43.70643,
-    longitude: -79.39864,
-};
-let savedLocationsList: IGeoCoordinatesData[] = [defaultLoc, defaultLoc];
-
-const CACHE_DURATION = 30 * 60 * 1000;
-
-const envPath = configureAPIKeys();
-dotenv.config({ path: envPath });
-const weatherAPIKey = process.env.WEATHER_API as string;
-const weatherAPIKeyLatitudeParameter = process.env.WEATHER_API_LATITUDE_PARAMETER as string;
-const weatherAPIKeyLongitudeParameter = process.env.WEATHER_API_LONGITUDE_PARAMETER as string;
-const weatherAPIKeyForecastParameters = process.env.WEATHER_API_FORECAST_PARAMETERS as string;
-const geoAPIKey = process.env.GEO_API as string;
-const geoAPIKeyParameters = process.env.GEO_API_PARAMETERS as string;
 
 async function fetchWeather(latitude: number, longitude: number): Promise<IWeatherAPIResponse> {
     const cachedWeatherData = weatherDataCache.find(
@@ -245,5 +255,37 @@ function configureAPIKeys() {
         return path.join(process.cwd(), ".env");
     } else {
         return path.join(process.resourcesPath, ".env");
+    }
+}
+
+async function savelocationData() {
+    const userData: string = app.getPath("userData");
+    const filePath: string = path.join(userData, "locations.json");
+    let locationsData: ILocationsData = {
+        defaultLocation: defaultLoc,
+        savedLocations: savedLocationsList,
+    };
+
+    const jsonData: string = JSON.stringify(locationsData, null, 4);
+    try {
+        await fs.writeFile(filePath, jsonData, "utf8");
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function loadLocationData() {
+    const userData: string = app.getPath("userData");
+    const filePath: string = path.join(userData, "locations.json");
+    try {
+        const data: string = await fs.readFile(filePath, "utf8");
+        const jsonData: ILocationsData = JSON.parse(data);
+        defaultLoc = jsonData.defaultLocation != null ? jsonData.defaultLocation : defaultLoc;
+        savedLocationsList =
+            jsonData.savedLocations.length > 0 ? jsonData.savedLocations : [defaultLoc];
+        console.log("data loaded");
+        console.log(jsonData);
+    } catch (error) {
+        console.log("unable to read saved location data", error);
     }
 }

@@ -13,8 +13,8 @@ import buttonLeftIcon from "./assets/button_icons/button_left.svg";
 import buttonRightIcon from "./assets/button_icons/button_right.svg";
 import searchMenuButtonIcon from "./assets/button_icons/search_icon_white.svg";
 import savedCitiesMenuButtonIcon from "./assets/button_icons/location_icon_white.svg";
-import SearchCityMenu from "./Components/SearchCityMenu";
-import SavedCitiesMenu from "./Components/SavedCitiesMenu";
+import SearchLocationMenu from "./Components/SearchLocationMenu";
+import SavedLocationsMenu from "./Components/SavedLocationsMenu";
 const root = createRoot(document.body);
 root.render(<App />);
 
@@ -26,30 +26,33 @@ function App() {
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true); // fake loading screen for UX
 
-    const [defaultCity, setDefaultCity] = useState<IGeoCoordinatesData>();
-    const [currentCityGeoData, setCurrentCityGeoData] = useState<IGeoCoordinatesData | null>();
+    const [defaultLocation, setDefaultLocation] = useState<IGeoCoordinatesData>();
+    const [currentLocationGeoData, setCurrentLocationGeoData] =
+        useState<IGeoCoordinatesData | null>();
     const [savedCitiesDataList, setSavedCitiesDataList] = useState<IGeoCoordinatesData[]>([]);
-    const [searchCityMenuOpen, setSearchCityMenuOpen] = useState<boolean>(true);
-    const [savedCitiesMenuOpen, setSavedCitiesMenuOpen] = useState<boolean>(false);
+    const [searchLocationMenuOpen, setSearchLocationMenuOpen] = useState<boolean>(false);
+    const [savedLocationsMenuOpen, setSavedLocationsMenuOpen] = useState<boolean>(true);
+
+    const weatherCardContainerRef = useRef<HTMLDivElement>(null);
+
     let initApp = async () => {
-        const defaultCity = await window.mainProcess.getDefaultLocation();
+        const defaultLocation = await window.mainProcess.getDefaultLocation();
         const savedLocations = await window.mainProcess.getListOfSavedLocations();
-        setCurrentCityGeoData(defaultCity);
-        //setSavedCitiesDataList([defaultCity]);
+        setCurrentLocationGeoData(defaultLocation);
         setSavedCitiesDataList(savedLocations);
-        setDefaultCity(defaultCity);
+        setDefaultLocation(defaultLocation);
         setIsSettingUp(false);
     };
+
     useEffect(() => {
         initApp();
     }, []);
 
-    const weatherCardContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         if (isSettingUp) return;
         const apiCall: Promise<IWeatherAPIResponse> = window.mainProcess.getWeatherData(
-            currentCityGeoData!.latitude,
-            currentCityGeoData!.longitude,
+            currentLocationGeoData!.latitude,
+            currentLocationGeoData!.longitude,
         );
 
         const delayTimer: Promise<any> = new Promise((resolve) => setTimeout(resolve, 1200));
@@ -75,22 +78,25 @@ function App() {
                 setConnectionStatus(false);
                 setIsLoading(false);
             });
-    }, [currentCityGeoData, isSettingUp]);
+    }, [currentLocationGeoData, isSettingUp]);
 
     //------------------------set current city function-----------------------
-    const handleSetCurrentCityFunction = useCallback((geoCoordinatesData: IGeoCoordinatesData) => {
-        let cityGeoData: IGeoCoordinatesData = {
-            city: geoCoordinatesData.city,
-            adminRegion: geoCoordinatesData.adminRegion,
-            country: geoCoordinatesData.country,
-            latitude: geoCoordinatesData.latitude,
-            longitude: geoCoordinatesData.longitude,
-        };
+    const handleSetCurrentLocationFunction = useCallback(
+        (geoCoordinatesData: IGeoCoordinatesData) => {
+            let cityGeoData: IGeoCoordinatesData = {
+                city: geoCoordinatesData.city,
+                adminRegion: geoCoordinatesData.adminRegion,
+                country: geoCoordinatesData.country,
+                latitude: geoCoordinatesData.latitude,
+                longitude: geoCoordinatesData.longitude,
+            };
 
-        setCurrentCityGeoData(cityGeoData);
+            setCurrentLocationGeoData(cityGeoData);
 
-        setIsLoading(true);
-    }, []);
+            setIsLoading(true);
+        },
+        [],
+    );
     //---------------------add to list of saved cities function-------------------------
     function addNewCityToSavedCitiesList(newCityGeoData: IGeoCoordinatesData) {
         setSavedCitiesDataList((currentList) => {
@@ -129,46 +135,49 @@ function App() {
     }
 
     //--------------------set default city--------------
-    const handleSetDefaultCityFunction = useCallback((newDefaultCity: IGeoCoordinatesData) => {
-        setDefaultCity(newDefaultCity);
-        window.mainProcess.setDefaultLocation(newDefaultCity);
-    }, []);
+    const handleSetDefaultLocationFunction = useCallback(
+        (newDefaultLocation: IGeoCoordinatesData) => {
+            setDefaultLocation(newDefaultLocation);
+            window.mainProcess.setDefaultLocation(newDefaultLocation);
+        },
+        [],
+    );
 
     //--------------------------------------------------------------------
     function currentMenu() {
-        if (searchCityMenuOpen) {
+        if (searchLocationMenuOpen) {
             return (
-                <SearchCityMenu
-                    handleSetMenuOpenCallBackFunction={setSearchCityMenuOpen}
-                    handleSearchCityCallBackFunction={getLocationData}
-                    handleSetCurrentCityCallBackFunction={handleSetCurrentCityFunction}
+                <SearchLocationMenu
+                    handleSetMenuOpenCallBackFunction={setSearchLocationMenuOpen}
+                    handleSearchLocationCallBackFunction={getLocationData}
+                    handleSetCurrentLocationCallBackFunction={handleSetCurrentLocationFunction}
                     handleSaveSelectedCityToListCallBackFunction={addNewCityToSavedCitiesList}
                 />
             );
-        } else if (savedCitiesMenuOpen) {
+        } else if (savedLocationsMenuOpen) {
             return (
-                <SavedCitiesMenu
-                    handleSetMenuOpenCallBackFunction={setSavedCitiesMenuOpen}
-                    handleSetCurrentCityCallBackFunction={handleSetCurrentCityFunction}
+                <SavedLocationsMenu
+                    handleSetMenuOpenCallBackFunction={setSavedLocationsMenuOpen}
+                    handleSetCurrentLocationCallBackFunction={handleSetCurrentLocationFunction}
                     handleDeleteFromSavedCitiesListCallBackFunction={
                         deleteSelectCityFromSavedCitiesList
                     }
-                    handleSetDefaultCityCallBackFunction={handleSetDefaultCityFunction}
+                    handleSetDefaultLocationCallBackFunction={handleSetDefaultLocationFunction}
                     savedCitiesList={savedCitiesDataList}
-                    defaultCity={defaultCity!}
+                    defaultLocation={defaultLocation!}
                 />
             );
         } else {
             return (
                 <div className="menu-buttons-container">
-                    <button className="menu-button" onClick={() => setSearchCityMenuOpen(true)}>
+                    <button className="menu-button" onClick={() => setSearchLocationMenuOpen(true)}>
                         <img
                             className="button-svg-icon"
                             src={searchMenuButtonIcon}
                             alt="search menu button"
                         />
                     </button>
-                    <button className="menu-button" onClick={() => setSavedCitiesMenuOpen(true)}>
+                    <button className="menu-button" onClick={() => setSavedLocationsMenuOpen(true)}>
                         <img
                             className="button-svg-icon"
                             src={savedCitiesMenuButtonIcon}
@@ -208,7 +217,7 @@ function App() {
                 {menu}
                 <div className="app-main-content">
                     <h1 className="current-city-header content-header">
-                        {`${currentCityGeoData!.city}, ${currentCityGeoData!.country}`}
+                        {`${currentLocationGeoData!.city}, ${currentLocationGeoData!.country}`}
                     </h1>
                     <CurrentDayWeatherBanner
                         unit={weatherData!.units.temperature}
