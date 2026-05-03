@@ -1,30 +1,31 @@
-import React, { useState, useCallback } from "react";
-import LocationCard from "./LocationCard";
+import React, { useState } from "react";
 import "./SearchLocationMenu.css";
 import { IGeoCoordinatesData } from "../typings";
 import closeMenuButtonIcon from "../assets/button_icons/close_menu_button_icon.svg";
-import searchButtonIcon from "../assets/button_icons/search_icon_black.svg";
 import addButtonIcon from "../assets/button_icons/add_button_icon.svg";
-
+import LocationCard from "./LocationCard";
+import SearchBar from "./SearchBar";
 interface ISearchLocationMenuProps {
     handleSetMenuOpenCallBackFunction: (newVal: boolean) => void;
     handleSearchLocationCallBackFunction: (
-        cityName: string,
+        locationName: string,
     ) => Promise<IGeoCoordinatesData[] | null>;
     handleSetCurrentLocationCallBackFunction: (geoData: IGeoCoordinatesData) => void;
-    handleSaveSelectedCityToListCallBackFunction: (cityGeoData: IGeoCoordinatesData) => void;
+    handleSaveSelectedLocationToListCallBackFunction: (
+        locationGeoData: IGeoCoordinatesData,
+    ) => void;
 }
 export default function SearchLocationMenu({
     handleSetMenuOpenCallBackFunction,
     handleSearchLocationCallBackFunction,
     handleSetCurrentLocationCallBackFunction,
-    handleSaveSelectedCityToListCallBackFunction,
+    handleSaveSelectedLocationToListCallBackFunction,
 }: ISearchLocationMenuProps) {
     const [locations, setLocations] = useState<IGeoCoordinatesData[] | null>(null);
 
-    const handleCitySearchFunction = async (cityName: string) => {
+    const handleLocationSearchFunction = async (locationName: string) => {
         const apiData: IGeoCoordinatesData[] | null =
-            await handleSearchLocationCallBackFunction(cityName);
+            await handleSearchLocationCallBackFunction(locationName);
         setLocations(apiData);
     };
     const handleSetCurrentLocationOnClick = (geoData: IGeoCoordinatesData) => {
@@ -45,19 +46,15 @@ export default function SearchLocationMenu({
         }
     };
 
-    function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
-        handleCitySearchFunction(e.target.value);
-    }
-
     let locationCards =
         locations != null ? (
             createLocationCard(
                 locations,
                 handleSetCurrentLocationOnClick,
-                handleSaveSelectedCityToListCallBackFunction,
+                handleSaveSelectedLocationToListCallBackFunction,
             )
         ) : (
-            <p className="no-city-found-text">no location found</p>
+            <p className="no-location-found-text">no location found</p>
         );
 
     return (
@@ -72,26 +69,12 @@ export default function SearchLocationMenu({
                 >
                     <img src={closeMenuButtonIcon} alt="close menu button" />
                 </button>
-                <div className="search-bar-container">
-                    <label htmlFor="city-search" className="hide-visually"></label>
-                    <div className="search-bar">
-                        <input
-                            type="search"
-                            name="q"
-                            id="city-search"
-                            placeholder="Search for location"
-                            onChange={handleOnChange}
-                        />
-                        <button type="submit" onClick={handleSearchButtonOnClick}>
-                            <img
-                                className="search-button-svg-icon"
-                                src={searchButtonIcon}
-                                alt="search button"
-                            />
-                        </button>
-                    </div>
-                </div>
-                <div className="city-search-results-container">{locationCards}</div>
+                <SearchBar
+                    handleSearchButtonOnClickCallBackFunction={handleSearchButtonOnClick}
+                    handleSearchCallBackFunction={handleLocationSearchFunction}
+                />
+
+                <div className="location-search-results-container">{locationCards}</div>
             </div>
         </div>
     );
@@ -100,27 +83,30 @@ export default function SearchLocationMenu({
 function createLocationCard(
     locations: IGeoCoordinatesData[],
     handleSetCurrentLocationFunctionOnClick: (geoData: IGeoCoordinatesData) => void,
-    handleSaveSelectedCityToListFunctionOnClick: (cityGeoData: IGeoCoordinatesData) => void,
+    handleSaveSelectedLocationToListFunctionOnClick: (locationGeoData: IGeoCoordinatesData) => void,
 ) {
     let locationCards = [];
     for (let i = 0; i < locations.length; i++) {
-        let city = locations[i];
+        let location = locations[i];
         locationCards.push(
-            <div className="search-city-card" key={`${city.latitude}_${city.longitude}`}>
+            <div
+                className="search-location-card"
+                key={`${location.latitude}_${location.longitude}`}
+            >
                 <LocationCard
-                    cityName={city.city}
-                    adminRegion={city.adminRegion}
-                    countryName={city.country}
-                    latitude={city.latitude}
-                    longitude={city.longitude}
+                    cityName={location.city}
+                    adminRegion={location.adminRegion}
+                    countryName={location.country}
+                    latitude={location.latitude}
+                    longitude={location.longitude}
                     setCurrentLocationFunctionOnClick={handleSetCurrentLocationFunctionOnClick}
                 />
                 <button
                     type="button"
-                    className="add-city-button"
+                    className="add-location-button"
                     onClick={() => {
-                        handleSaveSelectedCityToListFunctionOnClick(city);
-                        handleSetCurrentLocationFunctionOnClick(city);
+                        handleSaveSelectedLocationToListFunctionOnClick(location);
+                        handleSetCurrentLocationFunctionOnClick(location);
                     }}
                 >
                     <img src={addButtonIcon} alt="add button" />

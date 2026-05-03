@@ -12,9 +12,10 @@ import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
 import buttonLeftIcon from "./assets/button_icons/button_left.svg";
 import buttonRightIcon from "./assets/button_icons/button_right.svg";
 import searchMenuButtonIcon from "./assets/button_icons/search_icon_white.svg";
-import savedCitiesMenuButtonIcon from "./assets/button_icons/location_icon_white.svg";
+import savedLocationsMenuButtonIcon from "./assets/button_icons/location_icon_white.svg";
 import SearchLocationMenu from "./Components/SearchLocationMenu";
 import SavedLocationsMenu from "./Components/SavedLocationsMenu";
+import SetupMenu from "./Components/SetupMenu";
 const root = createRoot(document.body);
 root.render(<App />);
 
@@ -29,9 +30,9 @@ function App() {
     const [defaultLocation, setDefaultLocation] = useState<IGeoCoordinatesData>();
     const [currentLocationGeoData, setCurrentLocationGeoData] =
         useState<IGeoCoordinatesData | null>();
-    const [savedCitiesDataList, setSavedCitiesDataList] = useState<IGeoCoordinatesData[]>([]);
+    const [savedLocationsDataList, setSavedLocationsDataList] = useState<IGeoCoordinatesData[]>([]);
     const [searchLocationMenuOpen, setSearchLocationMenuOpen] = useState<boolean>(false);
-    const [savedLocationsMenuOpen, setSavedLocationsMenuOpen] = useState<boolean>(true);
+    const [savedLocationsMenuOpen, setSavedLocationsMenuOpen] = useState<boolean>(false);
 
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +40,7 @@ function App() {
         const defaultLocation = await window.mainProcess.getDefaultLocation();
         const savedLocations = await window.mainProcess.getListOfSavedLocations();
         setCurrentLocationGeoData(defaultLocation);
-        setSavedCitiesDataList(savedLocations);
+        setSavedLocationsDataList(savedLocations);
         setDefaultLocation(defaultLocation);
         setIsSettingUp(false);
     };
@@ -80,10 +81,10 @@ function App() {
             });
     }, [currentLocationGeoData, isSettingUp]);
 
-    //------------------------set current city function-----------------------
+    //------------------------set current location function-----------------------
     const handleSetCurrentLocationFunction = useCallback(
         (geoCoordinatesData: IGeoCoordinatesData) => {
-            let cityGeoData: IGeoCoordinatesData = {
+            let locationGeoData: IGeoCoordinatesData = {
                 city: geoCoordinatesData.city,
                 adminRegion: geoCoordinatesData.adminRegion,
                 country: geoCoordinatesData.country,
@@ -91,39 +92,39 @@ function App() {
                 longitude: geoCoordinatesData.longitude,
             };
 
-            setCurrentLocationGeoData(cityGeoData);
+            setCurrentLocationGeoData(locationGeoData);
 
             setIsLoading(true);
         },
         [],
     );
-    //---------------------add to list of saved cities function-------------------------
-    function addNewCityToSavedCitiesList(newCityGeoData: IGeoCoordinatesData) {
-        setSavedCitiesDataList((currentList) => {
+    //---------------------add to list of saved locations function-------------------------
+    function addNewLocationToSavedLocationsList(newLocationGeoData: IGeoCoordinatesData) {
+        setSavedLocationsDataList((currentList) => {
             let notInList = true;
-            currentList.some((cityData) => {
+            currentList.some((locationData) => {
                 if (
-                    cityData.latitude === newCityGeoData.latitude &&
-                    cityData.longitude === newCityGeoData.longitude
+                    locationData.latitude === newLocationGeoData.latitude &&
+                    locationData.longitude === newLocationGeoData.longitude
                 ) {
                     notInList = false;
                 }
             });
             if (notInList && currentList.length < 5) {
-                window.mainProcess.setListOfSavedLocations([...currentList, newCityGeoData]);
-                return [...currentList, newCityGeoData];
+                window.mainProcess.setListOfSavedLocations([...currentList, newLocationGeoData]);
+                return [...currentList, newLocationGeoData];
             } else {
                 return currentList;
             }
         });
     }
 
-    //--------------delete city from list of saved cities----------------
-    function deleteSelectCityFromSavedCitiesList(cityGeoData: IGeoCoordinatesData) {
-        const newList = savedCitiesDataList.filter((_cityGeoData: IGeoCoordinatesData) => {
+    //--------------delete location from list of saved locations----------------
+    function deleteSelectLocationFromSavedLocationsList(locationGeoData: IGeoCoordinatesData) {
+        const newList = savedLocationsDataList.filter((_locationGeoData: IGeoCoordinatesData) => {
             if (
-                _cityGeoData.latitude === cityGeoData.latitude &&
-                _cityGeoData.longitude === cityGeoData.longitude
+                _locationGeoData.latitude === locationGeoData.latitude &&
+                _locationGeoData.longitude === locationGeoData.longitude
             ) {
                 return false; //if false remove from list
             } else {
@@ -131,10 +132,10 @@ function App() {
             }
         });
         window.mainProcess.setListOfSavedLocations(newList);
-        setSavedCitiesDataList(newList);
+        setSavedLocationsDataList(newList);
     }
 
-    //--------------------set default city--------------
+    //--------------------set default location--------------
     const handleSetDefaultLocationFunction = useCallback(
         (newDefaultLocation: IGeoCoordinatesData) => {
             setDefaultLocation(newDefaultLocation);
@@ -143,7 +144,7 @@ function App() {
         [],
     );
 
-    //--------------------------------------------------------------------
+    //----------------------menu components----------------------------------------------
     function currentMenu() {
         if (searchLocationMenuOpen) {
             return (
@@ -151,7 +152,9 @@ function App() {
                     handleSetMenuOpenCallBackFunction={setSearchLocationMenuOpen}
                     handleSearchLocationCallBackFunction={getLocationData}
                     handleSetCurrentLocationCallBackFunction={handleSetCurrentLocationFunction}
-                    handleSaveSelectedCityToListCallBackFunction={addNewCityToSavedCitiesList}
+                    handleSaveSelectedLocationToListCallBackFunction={
+                        addNewLocationToSavedLocationsList
+                    }
                 />
             );
         } else if (savedLocationsMenuOpen) {
@@ -159,11 +162,11 @@ function App() {
                 <SavedLocationsMenu
                     handleSetMenuOpenCallBackFunction={setSavedLocationsMenuOpen}
                     handleSetCurrentLocationCallBackFunction={handleSetCurrentLocationFunction}
-                    handleDeleteFromSavedCitiesListCallBackFunction={
-                        deleteSelectCityFromSavedCitiesList
+                    handleDeleteFromSavedLocationsListCallBackFunction={
+                        deleteSelectLocationFromSavedLocationsList
                     }
                     handleSetDefaultLocationCallBackFunction={handleSetDefaultLocationFunction}
-                    savedCitiesList={savedCitiesDataList}
+                    savedLocationsList={savedLocationsDataList}
                     defaultLocation={defaultLocation!}
                 />
             );
@@ -180,13 +183,24 @@ function App() {
                     <button className="menu-button" onClick={() => setSavedLocationsMenuOpen(true)}>
                         <img
                             className="button-svg-icon"
-                            src={savedCitiesMenuButtonIcon}
-                            alt="saved cities menu button"
+                            src={savedLocationsMenuButtonIcon}
+                            alt="saved locations menu button"
                         />
                     </button>
                 </div>
             );
         }
+    }
+    //----------------------------------------
+    if (defaultLocation === undefined || savedLocationsDataList.length < 1) {
+        return (
+            <SetupMenu
+                searchLocationCallBackFunction={getLocationData}
+                setCurrentLocationCallBackFunction={handleSetCurrentLocationFunction}
+                setDefaultLocationCallBackFunction={handleSetDefaultLocationFunction}
+                saveSelectedLocationToListCallBackFunction={addNewLocationToSavedLocationsList}
+            />
+        );
     }
 
     if (isLoading) {
@@ -216,7 +230,7 @@ function App() {
             <div className={`app-container ${theme}`}>
                 {menu}
                 <div className="app-main-content">
-                    <h1 className="current-city-header content-header">
+                    <h1 className="current-location-header content-header">
                         {`${currentLocationGeoData!.city}, ${currentLocationGeoData!.country}`}
                     </h1>
                     <CurrentDayWeatherBanner
@@ -413,15 +427,15 @@ function handleWeatherCardScroll(scrollRight: boolean, weatherCardsRef: RefObjec
 }
 
 //-------------------API FUNCTION CALLS------------------------
-async function getLocationData(cityName: string) {
+async function getLocationData(locationName: string) {
     try {
-        const apiCall: IGeoAPIResponse = await window.mainProcess.getLocationData(cityName);
+        const apiCall: IGeoAPIResponse = await window.mainProcess.getLocationData(locationName);
         if (apiCall != null) {
             const data = await apiCall.locations;
 
             return data;
         } else {
-            console.log("city doesn't exist");
+            console.log("location doesn't exist");
             return null;
         }
     } catch (error) {

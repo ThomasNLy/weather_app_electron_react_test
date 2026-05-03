@@ -8,17 +8,19 @@ import trashButtonIcon from "../assets/button_icons/trash_can_pixel2.svg";
 interface ISavedLocationsMenuProps {
     handleSetMenuOpenCallBackFunction: (newVal: boolean) => void;
     handleSetCurrentLocationCallBackFunction: (geoCoordinatesData: IGeoCoordinatesData) => void;
-    handleDeleteFromSavedCitiesListCallBackFunction: (cityGeoData: IGeoCoordinatesData) => void;
+    handleDeleteFromSavedLocationsListCallBackFunction: (
+        locationGeoData: IGeoCoordinatesData,
+    ) => void;
     handleSetDefaultLocationCallBackFunction: (newDefaultLocation: IGeoCoordinatesData) => void;
-    savedCitiesList: IGeoCoordinatesData[];
+    savedLocationsList: IGeoCoordinatesData[];
     defaultLocation: IGeoCoordinatesData;
 }
 export default function SavedLocationsMenu({
     handleSetMenuOpenCallBackFunction,
     handleSetCurrentLocationCallBackFunction,
-    handleDeleteFromSavedCitiesListCallBackFunction,
+    handleDeleteFromSavedLocationsListCallBackFunction,
     handleSetDefaultLocationCallBackFunction,
-    savedCitiesList,
+    savedLocationsList,
     defaultLocation,
 }: ISavedLocationsMenuProps) {
     const handleSetCurrentLocationOnClick = (geoCoordinates: IGeoCoordinatesData) => {
@@ -27,16 +29,16 @@ export default function SavedLocationsMenu({
     };
 
     let locationCardss =
-        savedCitiesList.length > 0 ? (
+        savedLocationsList.length > 0 ? (
             createLocationCards(
                 defaultLocation,
-                savedCitiesList,
+                savedLocationsList,
                 handleSetCurrentLocationOnClick,
-                handleDeleteFromSavedCitiesListCallBackFunction,
+                handleDeleteFromSavedLocationsListCallBackFunction,
                 handleSetDefaultLocationCallBackFunction,
             )
         ) : (
-            <p className="no-city-found-text">no cities saved</p>
+            <p className="no-location-found-text">no locations saved</p>
         );
 
     return (
@@ -51,8 +53,8 @@ export default function SavedLocationsMenu({
                 >
                     <img src={closeMenuButtonIcon} alt="close menu button" />
                 </button>
-                <h1 className="saved-cities-menu-header">Locations</h1>
-                <div className="city-list-container">{locationCardss}</div>
+                <h1 className="saved-locations-menu-header">Locations</h1>
+                <div className="location-list-container">{locationCardss}</div>
             </div>
         </div>
     );
@@ -62,37 +64,37 @@ function createLocationCards(
     defaultLocation: IGeoCoordinatesData,
     locations: IGeoCoordinatesData[],
     handleSetCurrentLocationFunction: (geoData: IGeoCoordinatesData) => void,
-    handleDeleteFromSavedCitiesListFunction: (cityGeoData: IGeoCoordinatesData) => void,
+    handleDeleteFromSavedLocationsListFunction: (locationGeoData: IGeoCoordinatesData) => void,
     handleSetDefaultLocationFunction: (newDefaultLocation: IGeoCoordinatesData) => void,
 ) {
     let locationCards = [];
     for (let i = 0; i < locations.length; i++) {
-        let city = locations[i];
+        let location = locations[i];
         let isDefaultLocation =
-            city.latitude === defaultLocation.latitude &&
-            city.longitude === defaultLocation.longitude;
+            location.latitude === defaultLocation.latitude &&
+            location.longitude === defaultLocation.longitude;
         console.log(isDefaultLocation);
         locationCards.push(
-            <div className="saved-city-card" key={`${city.latitude}_${city.longitude}`}>
+            <div className="saved-location-card" key={`${location.latitude}_${location.longitude}`}>
                 <LocationCard
-                    cityName={city.city}
-                    adminRegion={city.adminRegion}
-                    countryName={city.country}
-                    latitude={city.latitude}
-                    longitude={city.longitude}
+                    cityName={location.city}
+                    adminRegion={location.adminRegion}
+                    countryName={location.country}
+                    latitude={location.latitude}
+                    longitude={location.longitude}
                     setCurrentLocationFunctionOnClick={handleSetCurrentLocationFunction}
                 />
                 <button
                     type="button"
                     className={`button-svg-icon set-default-loc-button saved-loc-button ${isDefaultLocation ? "hide-saved-loc-menu-button" : ""}`}
-                    onClick={() => handleSetDefaultLocationFunction(city)}
+                    onClick={() => handleSetDefaultLocationFunction(location)}
                 >
-                    Set Default Location
+                    Set as default
                 </button>
                 <button
                     type="button"
                     className={`button-svg-icon delete-loc-button saved-loc-button ${isDefaultLocation ? "hide-saved-loc-menu-button" : ""}`}
-                    onClick={() => handleDeleteFromSavedCitiesListFunction(city)}
+                    onClick={() => handleDeleteFromSavedLocationsListFunction(location)}
                 >
                     <img src={trashButtonIcon} alt="trash button" />
                 </button>

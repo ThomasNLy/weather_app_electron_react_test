@@ -17,7 +17,7 @@
     flex-direction: column;
     position: relative;
 }
-.saved-cities-menu-header {
+.saved-locations-menu-header {
     margin-block: 0;
     margin-top: -0.5em;
 }
@@ -36,13 +36,13 @@
     background-color: rgb(180, 180, 180);
 }
 
-.city-list-container {
+.location-list-container {
     display: grid;
     grid-template-columns: 1fr;
     margin-top: 3em;
 }
 
-.saved-city-card {
+.saved-location-card {
     display: grid;
     grid-template-columns: 1fr auto auto;
     align-items: center;
@@ -62,10 +62,9 @@
 .set-default-loc-button {
     background: none;
     border: none;
-    width: 100px;
+    width: 105px;
     height: 46px;
-    padding: 10px 10px;
-    line-height: 15px;
+    padding: 10px 0px;
 }
 .delete-loc-button {
     background: none;
