@@ -1,0 +1,25 @@
+.setup-menu {
+    width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 0.9em;
+}
+.setup-menu-icon {
+    width: fit-content;
+}
+.setup-menu-header {
+    margin-block: 0;
+    font-size: 1.2em;
+}
+.setup-menu p {
+    margin-block: 0;
+}
+.setup-menu-search-location-cards-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    /* margin-top: 0.5em; */
+}
