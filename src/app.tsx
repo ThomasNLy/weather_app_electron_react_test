@@ -20,8 +20,8 @@ const root = createRoot(document.body);
 root.render(<App />);
 
 function App() {
-    console.log("Width: " + window.innerWidth);
-    console.log("Height: " + window.innerHeight);
+    // console.log("Width: " + window.innerWidth);
+    // console.log("Height: " + window.innerHeight);
     const [isSettingUp, setIsSettingUp] = useState<boolean>(true);
     const [weatherData, setWeatherData] = useState<IWeatherData | null>(null);
     const [connectionStatus, setConnectionStatus] = useState<boolean>(false);
@@ -33,6 +33,8 @@ function App() {
     const [savedLocationsDataList, setSavedLocationsDataList] = useState<IGeoCoordinatesData[]>([]);
     const [searchLocationMenuOpen, setSearchLocationMenuOpen] = useState<boolean>(false);
     const [savedLocationsMenuOpen, setSavedLocationsMenuOpen] = useState<boolean>(false);
+
+    const [currentLocalTime, setCurrentLocalTime] = useState<string>("");
 
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
 
@@ -81,6 +83,22 @@ function App() {
             });
     }, [currentLocationGeoData, isSettingUp]);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const now = new Date();
+
+            const timeFormatter = new Intl.DateTimeFormat("en-US", {
+                timeZone: currentLocationGeoData?.timezone,
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false,
+            });
+            setCurrentLocalTime(timeFormatter.format(now));
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [currentLocationGeoData?.timezone]);
+
     //------------------------set current location function-----------------------
     const handleSetCurrentLocationFunction = useCallback(
         (geoCoordinatesData: IGeoCoordinatesData) => {
@@ -90,6 +108,7 @@ function App() {
                 country: geoCoordinatesData.country,
                 latitude: geoCoordinatesData.latitude,
                 longitude: geoCoordinatesData.longitude,
+                timezone: geoCoordinatesData.timezone,
             };
 
             setCurrentLocationGeoData(locationGeoData);
@@ -230,6 +249,7 @@ function App() {
             <div className={`app-container ${theme}`}>
                 {menu}
                 <div className="app-main-content">
+                    <p>{currentLocalTime}</p>
                     <h1 className="current-location-header content-header">
                         {`${currentLocationGeoData!.city}, ${currentLocationGeoData!.country}`}
                     </h1>

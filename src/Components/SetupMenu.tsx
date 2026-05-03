@@ -69,6 +69,7 @@ function createLocationCards(
                 countryName={location.country}
                 latitude={location.latitude}
                 longitude={location.longitude}
+                timezone={location.timezone}
                 setCurrentLocationFunctionOnClick={handleSetAsDefaultLocationFunctionOnClick}
             />,
         );

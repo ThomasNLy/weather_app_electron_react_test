@@ -7,6 +7,7 @@ interface ILocationCardProps {
     countryName: string;
     latitude: number;
     longitude: number;
+    timezone: string;
     setCurrentLocationFunctionOnClick: (geoData: IGeoCoordinatesData) => void;
 }
 
@@ -16,6 +17,7 @@ export default function LocationCard({
     countryName,
     latitude,
     longitude,
+    timezone,
     setCurrentLocationFunctionOnClick,
 }: ILocationCardProps) {
     let geoData: IGeoCoordinatesData = {
@@ -24,6 +26,7 @@ export default function LocationCard({
         city: cityName,
         adminRegion: adminRegion,
         country: countryName,
+        timezone: timezone,
     };
     return (
         <div className="location-card" onClick={() => setCurrentLocationFunctionOnClick(geoData)}>
