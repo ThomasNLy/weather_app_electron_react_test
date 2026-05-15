@@ -7,7 +7,7 @@ import PrecipitationCard from "./Components/PrecipitationCard";
 
 import "./app.css";
 import { IGeoAPIResponse, IGeoCoordinatesData, IWeatherAPIResponse, IWeatherData } from "./typings";
-import { WEATHERCODES, ISOFormatTimeZoneOffset } from "./utilities";
+import { WEATHERCODES, ISOFormatTimeZoneOffset, getCurrentDateInTimeZone } from "./utilities";
 import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
 import buttonLeftIcon from "./assets/button_icons/button_left.svg";
 import buttonRightIcon from "./assets/button_icons/button_right.svg";
@@ -34,8 +34,7 @@ function App() {
     const [searchLocationMenuOpen, setSearchLocationMenuOpen] = useState<boolean>(false);
     const [savedLocationsMenuOpen, setSavedLocationsMenuOpen] = useState<boolean>(false);
 
-    const [currentLocalTime, setCurrentLocalTime] = useState<string>("");
-
+    const [currentDate, setCurrentDate] = useState<string>("");
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
 
     let initApp = async () => {
@@ -53,6 +52,7 @@ function App() {
 
     useEffect(() => {
         if (isSettingUp) return;
+        setCurrentDate(getCurrentDateInTimeZone(currentLocationGeoData!.timeZone));
         const apiCall: Promise<IWeatherAPIResponse> = window.mainProcess.getWeatherData(
             currentLocationGeoData!.latitude,
             currentLocationGeoData!.longitude,
@@ -83,22 +83,6 @@ function App() {
             });
     }, [currentLocationGeoData, isSettingUp]);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const now = new Date();
-
-            const timeFormatter = new Intl.DateTimeFormat("en-US", {
-                timeZone: currentLocationGeoData?.timezone,
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: false,
-            });
-            setCurrentLocalTime(timeFormatter.format(now));
-        }, 1000);
-        return () => clearInterval(interval);
-    }, [currentLocationGeoData?.timezone]);
-
     //------------------------set current location function-----------------------
     const handleSetCurrentLocationFunction = useCallback(
         (geoCoordinatesData: IGeoCoordinatesData) => {
@@ -108,7 +92,7 @@ function App() {
                 country: geoCoordinatesData.country,
                 latitude: geoCoordinatesData.latitude,
                 longitude: geoCoordinatesData.longitude,
-                timezone: geoCoordinatesData.timezone,
+                timeZone: geoCoordinatesData.timeZone,
             };
 
             setCurrentLocationGeoData(locationGeoData);
@@ -244,12 +228,10 @@ function App() {
         const weatherCards = createWeatherCards(weatherData!, theme);
         const precipitationCards = createPrecipitationCards(weatherData!);
         let menu = currentMenu();
-
         return (
             <div className={`app-container ${theme}`}>
                 {menu}
                 <div className="app-main-content">
-                    <p>{currentLocalTime}</p>
                     <h1 className="current-location-header content-header">
                         {`${currentLocationGeoData!.city}, ${currentLocationGeoData!.country}`}
                     </h1>
@@ -260,6 +242,8 @@ function App() {
                         currentTemp={currentWeatherData.currentTemp}
                         weatherCode={currentWeatherData.weatherCode}
                         isDay={currentWeatherData.isDay}
+                        date={weatherData!.forecastDays[0]}
+                        timeZone={currentLocationGeoData?.timeZone}
                     />
                     <div className="weekly-forecast-content">
                         <button

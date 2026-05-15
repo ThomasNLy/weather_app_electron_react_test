@@ -133,7 +133,7 @@ export interface IGeoCoordinatesData {
     country: string;
     latitude: number;
     longitude: number;
-    timezone: string;
+    timeZone: string;
 }
 
 export interface ILocationsData {

@@ -30,7 +30,7 @@ let defaultLoc: IGeoCoordinatesData = {
     country: "Japan",
     latitude: 35.6895,
     longitude: 139.6917,
-    timezone: "Asia/Tokyo",
+    timeZone: "Asia/Tokyo",
 };
 let savedLocationsList: IGeoCoordinatesData[] = [];
 
@@ -215,7 +215,7 @@ async function fetchGeoLocationData(cityName: string): Promise<IGeoAPIResponse |
                     country: data.country,
                     longitude: data.longitude,
                     latitude: data.latitude,
-                    timezone: data.timezone,
+                    timeZone: data.timezone,
                 };
                 return locationData;
             });

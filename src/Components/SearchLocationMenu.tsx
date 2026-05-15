@@ -41,7 +41,7 @@ export default function SearchLocationMenu({
                 country: locations[0].country,
                 latitude: locations[0].latitude,
                 longitude: locations[0].longitude,
-                timezone: locations[0].timezone,
+                timeZone: locations[0].timeZone,
             };
             handleSetCurrentLocationCallBackFunction(firstResultGeoData);
         }
@@ -100,7 +100,7 @@ function createLocationCard(
                     countryName={location.country}
                     latitude={location.latitude}
                     longitude={location.longitude}
-                    timezone={location.timezone}
+                    timeZone={location.timeZone}
                     setCurrentLocationFunctionOnClick={handleSetCurrentLocationFunctionOnClick}
                 />
                 <button

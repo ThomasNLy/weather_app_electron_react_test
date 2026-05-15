@@ -8,6 +8,16 @@
 .weather-banner h2 {
     color: white;
     font-weight: 600;
+    margin-block-end: 0.1em;
+}
+.current-date-time-container {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    column-gap: 0.7em;
+    color: white;
+}
+.current-date-time-container p {
+    margin-block: 0em;
 }
 .current-weather-container {
     display: grid;

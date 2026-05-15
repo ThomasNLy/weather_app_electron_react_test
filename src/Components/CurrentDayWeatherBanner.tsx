@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./CurrentDayWeatherBanner.css";
 import { WEATHERCODES } from "../utilities";
 import cloudyIcon from "../assets/icons_160/cloudy_160.png";
@@ -18,6 +18,8 @@ interface IWeatherBannerProps {
     currentTemp: number;
     weatherCode: number;
     isDay: boolean;
+    date: string;
+    timeZone: any;
 }
 export default function CurrentDayWeatherBanner({
     unit,
@@ -26,11 +28,35 @@ export default function CurrentDayWeatherBanner({
     currentTemp,
     weatherCode,
     isDay,
+    date,
+    timeZone,
 }: IWeatherBannerProps) {
+    const [currentLocalTime, setCurrentLocalTime] = useState<string>("");
+    const DAYSOFTHEWEEK: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     let weatherStatus = weatherStatusIcon(weatherCode, isDay);
+    let currentWeekDay: number = new Date(date).getUTCDay();
+    useEffect(() => {
+        const timeFormatter = new Intl.DateTimeFormat("en-US", {
+            timeZone: timeZone,
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+        });
+        setCurrentLocalTime(timeFormatter.format(new Date()));
+        const interval = setInterval(() => {
+            const now = new Date();
+            setCurrentLocalTime(timeFormatter.format(now));
+        }, 30000);
+        return () => clearInterval(interval);
+    }, [timeZone]);
+
     return (
         <div className="weather-banner">
             <h2>Current Weather</h2>
+            <div className="current-date-time-container">
+                <p>{DAYSOFTHEWEEK[currentWeekDay]},</p>
+                <p>{currentLocalTime}</p>
+            </div>
             <div className="current-weather-container">
                 <img src={weatherStatus.icon} alt={weatherStatus.status} />
                 <div className="current-weather-data-container">
