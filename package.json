@@ -1,6 +1,6 @@
 {
-    "name": "electron_react_test",
-    "productName": "electron_react_test",
+    "name": "electron_react_weather_app",
+    "productName": "(W)EATHER HORIZON",
     "version": "1.0.0",
     "description": "My Electron application description",
     "main": ".webpack/main",
