@@ -1,3 +1,4 @@
+@import url("../variables.css");
 .menu-overlay {
     height: 100%;
     width: 100%;
@@ -29,7 +30,7 @@
     height: 36px;
 }
 .close-menu-button:hover {
-    background-color: rgb(180, 180, 180);
+    background-color: var(--button-hover-colour);
 }
 
 .no-location-found-text {
@@ -54,7 +55,7 @@
     padding: 15px 15px;
 }
 .add-location-button:hover {
-    background-color: rgb(180, 180, 180);
+    background-color: var(--button-hover-colour);
     border-radius: 5px;
 }
 @media screen and (min-width: 700px) {

@@ -1,3 +1,4 @@
+@import url("../variables.css");
 .location-card {
     background-color: var(--white-colour);
 
@@ -16,7 +17,7 @@
     grid-template-rows: auto;
 }
 .location-card:hover {
-    background-color: rgb(180, 180, 180);
+    background-color: var(--button-hover-colour);
 }
 .location-card h1 {
     font-size: 20px;

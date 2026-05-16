@@ -25,4 +25,7 @@
     --menu-bg-colour: #e5e5e5;
     --white-colour: #ffffff;
     --pale-grey-colour: #c8c8c8;
+
+    /* button hover colour */
+    --button-hover-colour: rgb(180, 180, 180);
 }

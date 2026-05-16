@@ -1,3 +1,4 @@
+@import url("../variables.css");
 .search-bar-container {
     /* max-width: 100%; */
     width: 100%;
@@ -43,7 +44,7 @@
     justify-content: center;
 }
 .search-bar button:hover {
-    background-color: rgb(180, 180, 180);
+    background-color: var(--button-hover-colour);
 }
 .search-button-svg-icon {
     width: 50%;

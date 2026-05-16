@@ -1,3 +1,4 @@
+@import url("../variables.css");
 .menu-overlay {
     height: 100%;
     width: 100%;
@@ -33,7 +34,7 @@
     height: 36px;
 }
 .close-menu-button:hover {
-    background-color: rgb(180, 180, 180);
+    background-color: var(--button-hover-colour);
 }
 
 .location-list-container {
@@ -56,7 +57,7 @@
     padding: 10px 10px;
 }
 .saved-loc-button:hover {
-    background-color: rgb(180, 180, 180);
+    background-color: var(--button-hover-colour);
     border-radius: 5px;
 }
 .set-default-loc-button {
