@@ -11,6 +11,7 @@ import { WEATHERCODES, ISOFormatTimeZoneOffset, getCurrentDateInTimeZone } from 
 import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
 import buttonLeftIcon from "./assets/button_icons/button_left.svg";
 import buttonRightIcon from "./assets/button_icons/button_right.svg";
+import refreshButtonIcon from "./assets/button_icons/refresh_button_icon.svg";
 import searchMenuButtonIcon from "./assets/button_icons/search_icon_white.svg";
 import savedLocationsMenuButtonIcon from "./assets/button_icons/location_icon_white.svg";
 import SearchLocationMenu from "./Components/SearchLocationMenu";
@@ -52,6 +53,7 @@ function App() {
 
     useEffect(() => {
         if (isSettingUp) return;
+
         setCurrentDate(getCurrentDateInTimeZone(currentLocationGeoData!.timeZone));
         const apiCall: Promise<IWeatherAPIResponse> = window.mainProcess.getWeatherData(
             currentLocationGeoData!.latitude,
@@ -101,6 +103,40 @@ function App() {
         },
         [],
     );
+
+    const handleRefreshFunction = useCallback(() => {
+        setIsLoading(true);
+        setCurrentDate(getCurrentDateInTimeZone(currentLocationGeoData!.timeZone));
+        const apiCall: Promise<IWeatherAPIResponse> = window.mainProcess.getWeatherData(
+            currentLocationGeoData!.latitude,
+            currentLocationGeoData!.longitude,
+        );
+
+        const delayTimer: Promise<any> = new Promise((resolve) => setTimeout(resolve, 1200));
+        const arrayOfPromiseToResolve: Promise<any>[] = [apiCall, delayTimer];
+        /*
+        used to ensure that the data is loaded in when retrieving data from 
+        the weather api and the fake delay is full finished as well for the loading
+        screen in case the data loaded in too quickly for better UX 
+        takes in an array of values returned form resolved promise and grabspecific promise's resolved result
+        from the array passed in, order matches order of items in array of promises
+        */
+
+        Promise.all(arrayOfPromiseToResolve)
+            .then((values: any[]) => {
+                const apiData: IWeatherAPIResponse = values[0];
+                if (apiData.status) {
+                    setWeatherData(apiData.weatherData);
+                }
+                setIsLoading(false);
+                setConnectionStatus(apiData.status);
+            })
+            .catch((error) => {
+                console.log("Node js Error with IPC main process probably crashed", error);
+                setConnectionStatus(false);
+                setIsLoading(false);
+            });
+    }, [currentLocationGeoData]);
     //---------------------add to list of saved locations function-------------------------
     function addNewLocationToSavedLocationsList(newLocationGeoData: IGeoCoordinatesData) {
         setSavedLocationsDataList((currentList) => {
@@ -231,6 +267,9 @@ function App() {
         return (
             <div className={`app-container ${theme}`}>
                 {menu}
+                <button className="refresh-button" onClick={handleRefreshFunction}>
+                    <img className="button-svg-icon" src={refreshButtonIcon} alt="refresh button" />
+                </button>
                 <div className="app-main-content">
                     <h1 className="current-location-header content-header">
                         {`${currentLocationGeoData!.city}, ${currentLocationGeoData!.country}`}
