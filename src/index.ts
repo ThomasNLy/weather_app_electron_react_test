@@ -145,7 +145,7 @@ async function fetchWeather(latitude: number, longitude: number): Promise<IWeath
             cachedDate !== currentDate
         ) {
             console.log("fresh api pull");
-            // console.log(Date.now() - weatherDataCache.timeStamp);
+
             const configuredWeatherAPIKey: string = `${weatherAPIKey}${weatherAPIKeyLatitudeParameter}${latitude}${weatherAPIKeyLongitudeParameter}${longitude}${weatherAPIKeyForecastParameters}`;
 
             const response = await fetch(configuredWeatherAPIKey);
