@@ -45,6 +45,13 @@ export function ISOFormatTimeZoneOffset(UTCHourOffset: number): string {
     return formattedHour;
 }
 
+/**
+ *
+ * @param timeZone the time zone passed as a string, for example `"Asia/Tokyo"`
+ * @returns the current date in the given timezone as a string in yyyy-mm-dd format
+ * @example 2026-01-25
+ *
+ */
 export function getCurrentDateInTimeZone(timeZone: string): string {
     const formatter = new Intl.DateTimeFormat("en-CA", {
         timeZone: timeZone,
@@ -53,4 +60,16 @@ export function getCurrentDateInTimeZone(timeZone: string): string {
         day: "2-digit",
     });
     return formatter.format(new Date());
+}
+
+export function getCurrentTimeInTimeZone(timeZone: string): Date {
+    const formatter = new Date().toLocaleDateString("en-CA", {
+        timeZone: timeZone,
+        hour12: false,
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+    });
+
+    return new Date(formatter);
 }

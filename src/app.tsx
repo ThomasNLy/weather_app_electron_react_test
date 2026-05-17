@@ -7,7 +7,12 @@ import PrecipitationCard from "./Components/PrecipitationCard";
 
 import "./app.css";
 import { IGeoAPIResponse, IGeoCoordinatesData, IWeatherAPIResponse, IWeatherData } from "./typings";
-import { WEATHERCODES, ISOFormatTimeZoneOffset, getCurrentDateInTimeZone } from "./utilities";
+import {
+    WEATHERCODES,
+    ISOFormatTimeZoneOffset,
+    getCurrentDateInTimeZone,
+    getCurrentTimeInTimeZone,
+} from "./utilities";
 import loadingScreenIcon from "./assets/icons_160/partly_cloudy_day_160.png";
 import buttonLeftIcon from "./assets/button_icons/button_left.svg";
 import buttonRightIcon from "./assets/button_icons/button_right.svg";
@@ -53,7 +58,6 @@ function App() {
 
     useEffect(() => {
         if (isSettingUp) return;
-
         setCurrentDate(getCurrentDateInTimeZone(currentLocationGeoData!.timeZone));
         const apiCall: Promise<IWeatherAPIResponse> = window.mainProcess.getWeatherData(
             currentLocationGeoData!.latitude,
@@ -85,6 +89,20 @@ function App() {
             });
     }, [currentLocationGeoData, isSettingUp]);
 
+    //------------------midnight refresh to pull new weather data----------
+    useEffect(() => {
+        if (isSettingUp) return;
+
+        const now = getCurrentTimeInTimeZone(currentLocationGeoData!.timeZone);
+        const midnight = new Date(now).setHours(24, 0, 0, 0);
+        const diff = midnight - now.getTime();
+        const timeOut = setTimeout(() => {
+            handleRefreshFunction();
+        }, diff);
+
+        return () => clearTimeout(timeOut);
+    }, [currentDate, currentLocationGeoData]);
+
     //------------------------set current location function-----------------------
     const handleSetCurrentLocationFunction = useCallback(
         (geoCoordinatesData: IGeoCoordinatesData) => {
@@ -106,7 +124,7 @@ function App() {
 
     const handleRefreshFunction = useCallback(() => {
         setIsLoading(true);
-        setCurrentDate(getCurrentDateInTimeZone(currentLocationGeoData!.timeZone));
+
         const apiCall: Promise<IWeatherAPIResponse> = window.mainProcess.getWeatherData(
             currentLocationGeoData!.latitude,
             currentLocationGeoData!.longitude,
@@ -136,6 +154,7 @@ function App() {
                 setConnectionStatus(false);
                 setIsLoading(false);
             });
+        setCurrentDate(getCurrentDateInTimeZone(currentLocationGeoData!.timeZone));
     }, [currentLocationGeoData]);
     //---------------------add to list of saved locations function-------------------------
     function addNewLocationToSavedLocationsList(newLocationGeoData: IGeoCoordinatesData) {

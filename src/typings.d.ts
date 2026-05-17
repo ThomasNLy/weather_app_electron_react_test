@@ -62,6 +62,7 @@ declare global {
 /**
  * @type {object} IWeatherData
  * @property {string} isDay - string representing if day or night
+ * @property {string} timeZone - string representation of the timezone e.g. `"Asia/Tokyo"`
  * @property {number} utcOffSetSeconds - UTC time off set in seconds
  * @property {{temperature: string, percipitation: string}} units - units used for weather data
  * @property {number} currentApparentTemp - the current apparent temperature, "feels like"
@@ -77,6 +78,7 @@ declare global {
  */
 export interface IWeatherData {
     isDay: boolean;
+    timeZone: string;
     utcOffSetSeconds: number;
     units: {
         temperature: string;
@@ -105,6 +107,7 @@ export interface IWeatherData {
  *  status: true,
  *  weatherData: {
  *   isDay: "Day",
+ *  timezone: "Asia/Tokyo",
  *   units: {
         temperature: "°C";
         precipitation: "%";

@@ -16,13 +16,17 @@ import {
     IGeoCoordinatesData,
     ILocationsData,
 } from "./typings";
+
+import { getCurrentDateInTimeZone } from "./utilities";
+
 interface IWeatherDataCache {
     geoCoordinates: { latitude: number; longitude: number };
     weatherData: IWeatherData;
     timeStamp: number;
+    date: string;
 }
 
-let weatherDataCache: IWeatherDataCache[] = [];
+let weatherDataCache: Map<string, IWeatherDataCache> = new Map();
 
 let defaultLoc: IGeoCoordinatesData = {
     city: "Tokyo",
@@ -125,15 +129,20 @@ ipcMain.on("set-saved-locations-list", (event, locationsList: IGeoCoordinatesDat
 });
 
 async function fetchWeather(latitude: number, longitude: number): Promise<IWeatherAPIResponse> {
-    const cachedWeatherData = weatherDataCache.find(
-        (data: IWeatherDataCache) =>
-            data.geoCoordinates.latitude === latitude &&
-            data.geoCoordinates.longitude === longitude,
-    );
+    const cachedWeatherData = weatherDataCache.get(`${latitude},${longitude}`);
+
+    const cachedDate = cachedWeatherData !== undefined ? cachedWeatherData.date : "";
+    const currentDate =
+        cachedWeatherData !== undefined
+            ? getCurrentDateInTimeZone(cachedWeatherData.weatherData.timeZone)
+            : "1990-01-01";
+    console.log(currentDate === cachedDate);
+    console.log(currentDate, cachedDate);
     try {
         if (
-            cachedWeatherData == undefined ||
-            Date.now() - cachedWeatherData.timeStamp > CACHE_DURATION
+            cachedWeatherData === undefined ||
+            Date.now() - cachedWeatherData.timeStamp > CACHE_DURATION ||
+            cachedDate !== currentDate
         ) {
             console.log("fresh api pull");
             // console.log(Date.now() - weatherDataCache.timeStamp);
@@ -148,6 +157,7 @@ async function fetchWeather(latitude: number, longitude: number): Promise<IWeath
 
             let weatherData: IWeatherData = {
                 isDay: data.current.is_day == 1 ? true : false,
+                timeZone: data.timezone,
                 utcOffSetSeconds: data.utc_offset_seconds,
                 units: {
                     temperature: data.daily_units.apparent_temperature_max,
@@ -168,8 +178,10 @@ async function fetchWeather(latitude: number, longitude: number): Promise<IWeath
                 geoCoordinates: { latitude: latitude, longitude: longitude },
                 weatherData: weatherData,
                 timeStamp: Date.now(),
+                date: weatherData.forecastDays[0],
             };
-            weatherDataCache.push(newEntry);
+            let weatherDataCacheKey = `${latitude},${longitude}`;
+            weatherDataCache.set(weatherDataCacheKey, newEntry);
             let apiResponse: IWeatherAPIResponse = {
                 status: true,
                 weatherData: weatherData,
