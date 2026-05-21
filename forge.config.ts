@@ -15,7 +15,7 @@ import path from "path";
 const config: ForgeConfig = {
     packagerConfig: {
         asar: true,
-        extraResource: [path.resolve(__dirname, ".env")],
+        extraResource: [path.resolve(__dirname, ".env"), "./src/assets"],
     },
     rebuildConfig: {},
     makers: [
