@@ -43,6 +43,8 @@ function App() {
     const [currentDate, setCurrentDate] = useState<string>("");
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
 
+    const savedLocationsDataListCapacity = 5;
+
     let initApp = async () => {
         const defaultLocation = await window.mainProcess.getDefaultLocation();
         const savedLocations = await window.mainProcess.getListOfSavedLocations();
@@ -168,7 +170,7 @@ function App() {
                     notInList = false;
                 }
             });
-            if (notInList && currentList.length < 5) {
+            if (notInList && currentList.length < savedLocationsDataListCapacity) {
                 window.mainProcess.setListOfSavedLocations([...currentList, newLocationGeoData]);
                 return [...currentList, newLocationGeoData];
             } else {
