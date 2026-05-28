@@ -73,7 +73,7 @@ function createLocationCards(
         let isDefaultLocation =
             location.latitude === defaultLocation.latitude &&
             location.longitude === defaultLocation.longitude;
-        console.log(isDefaultLocation);
+
         locationCards.push(
             <div className="saved-location-card" key={`${location.latitude}_${location.longitude}`}>
                 <LocationCard
