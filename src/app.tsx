@@ -362,14 +362,13 @@ function createWeatherCards(_weatherData: IWeatherData, theme: string) {
     const DAYSOFTHEWEEK: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
     //use this function to display time zone off set maybe???
-    let UTCTimeZoneOffset: string = ISOFormatTimeZoneOffset(
-        Math.trunc(_weatherData.utcOffSetSeconds / 3600),
-    );
+    // let UTCTimeZoneOffset: string = ISOFormatTimeZoneOffset(
+    //     Math.trunc(_weatherData.utcOffSetSeconds / 3600),
+    // );
 
     for (let i = 0; i < _weatherData.forecastDays.length; i++) {
         //ISO format is not used at all as it messes with weather app getting date to
-        //match local time zone
-        let ISOFormat = `${_weatherData.forecastDays[i]}T00:00:00${UTCTimeZoneOffset}`;
+        // let ISOFormat = `${_weatherData.forecastDays[i]}T00:00:00${UTCTimeZoneOffset}`;
         let day = new Date(_weatherData.forecastDays[i]);
 
         let weekdayName = i == 0 ? "Today" : DAYSOFTHEWEEK[day.getUTCDay()];
@@ -398,16 +397,10 @@ function createPrecipitationCards(_weatherData: IWeatherData) {
     let _precipitationCards = [];
     const DAYSOFTHEWEEK: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    let UTCTimeZoneOffset: string = ISOFormatTimeZoneOffset(
-        Math.trunc(_weatherData.utcOffSetSeconds / 3600),
-    );
-
     for (let i = 0; i < _weatherData.forecastDays.length; i++) {
-        let ISOFormat = `${_weatherData.forecastDays[i]}T00:00:00${UTCTimeZoneOffset}`;
         let calendarDate = _weatherData.forecastDays[i];
 
         let day = new Date(calendarDate);
-        //let day = new Date(ISOFormat);
 
         let weekdayName = i == 0 ? "Today" : DAYSOFTHEWEEK[day.getUTCDay()];
 
