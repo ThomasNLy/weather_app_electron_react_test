@@ -16,6 +16,7 @@ const config: ForgeConfig = {
     packagerConfig: {
         asar: true,
         extraResource: [path.resolve(__dirname, ".env"), "./src/assets"],
+        icon: path.join(__dirname, "src", "assets", "app_icons", "icon"),
     },
     rebuildConfig: {},
     makers: [

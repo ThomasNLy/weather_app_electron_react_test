@@ -88,7 +88,7 @@ const createWindow = (): void => {
     });
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
     mainWindow.setMinimumSize(600, 650);
     loadLocationData();
     loadCachedWeatherDataFromLocalStorage();
