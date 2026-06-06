@@ -12,7 +12,11 @@ export default function PopUpMessageBox({
         <div className="pop-up-message-overlay">
             <div className="pop-up-message-box">
                 <p>{message}</p>
-                <button type="button" onClick={() => handleClosePopUpCallBackFunction()}>
+                <button
+                    className="pop-up-message-box-button"
+                    type="button"
+                    onClick={() => handleClosePopUpCallBackFunction()}
+                >
                     Close
                 </button>
             </div>

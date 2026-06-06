@@ -92,13 +92,6 @@ export default function SearchLocationMenu({
                         }}
                     />
                 ) : null}
-                <PopUpMessageBox
-                    message="Couldn’t add any more locations, 
-                            remove others to add new ones"
-                    handleClosePopUpCallBackFunction={() => {
-                        setShowMaxLocationsPopUp(false);
-                    }}
-                />
             </div>
         </div>
     );

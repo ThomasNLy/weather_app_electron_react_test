@@ -10,9 +10,24 @@
 .pop-up-message-box {
     position: fixed;
     left: 50vw;
-    top: 30vh;
+    top: 45vh;
     transform: translate(-50%, -50%);
     text-align: center;
-    width: 320px;
+    width: 50%;
+    max-width: 300px;
+    padding: 0.5em 1em;
+    height: 20%;
+    max-height: 120px;
     background-color: var(--menu-bg-colour);
+    border-radius: 5px;
+}
+.pop-up-message-box-button {
+    border-style: solid;
+    border-color: var(--pale-grey-colour);
+    border-radius: 5px;
+    border-width: 0.5px;
+    padding: 0.5em 2em;
+}
+.pop-up-message-box-button:hover {
+    background-color: var(--button-hover-colour);
 }
