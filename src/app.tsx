@@ -215,6 +215,8 @@ function App() {
                     handleSaveSelectedLocationToListCallBackFunction={
                         addNewLocationToSavedLocationsList
                     }
+                    maxNumSavedLocations={savedLocationsDataListCapacity}
+                    currentSavedLocationsList={savedLocationsDataList}
                 />
             );
         } else if (savedLocationsMenuOpen) {

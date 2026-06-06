@@ -1,0 +1,18 @@
+@import url("../variables.css");
+.pop-up-message-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(92, 92, 92, 0.192);
+}
+.pop-up-message-box {
+    position: fixed;
+    left: 50vw;
+    top: 30vh;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 320px;
+    background-color: var(--menu-bg-colour);
+}

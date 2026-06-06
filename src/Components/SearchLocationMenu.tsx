@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import "./SearchLocationMenu.css";
 import { IGeoCoordinatesData } from "../typings";
 import closeMenuButtonIcon from "../assets/button_icons/close_menu_button_icon.svg";
 import addButtonIcon from "../assets/button_icons/add_button_icon.svg";
 import LocationCard from "./LocationCard";
 import SearchBar from "./SearchBar";
+import PopUpMessageBox from "./PopUpMessageBox";
 interface ISearchLocationMenuProps {
     handleSetMenuOpenCallBackFunction: (newVal: boolean) => void;
     handleSearchLocationCallBackFunction: (
@@ -14,15 +15,19 @@ interface ISearchLocationMenuProps {
     handleSaveSelectedLocationToListCallBackFunction: (
         locationGeoData: IGeoCoordinatesData,
     ) => void;
+    maxNumSavedLocations: number;
+    currentSavedLocationsList: IGeoCoordinatesData[];
 }
 export default function SearchLocationMenu({
     handleSetMenuOpenCallBackFunction,
     handleSearchLocationCallBackFunction,
     handleSetCurrentLocationCallBackFunction,
     handleSaveSelectedLocationToListCallBackFunction,
+    maxNumSavedLocations,
+    currentSavedLocationsList,
 }: ISearchLocationMenuProps) {
     const [locations, setLocations] = useState<IGeoCoordinatesData[] | null>(null);
-
+    const [showMaxLocationsPopUp, setShowMaxLocationsPopUp] = useState<boolean>(false);
     const handleLocationSearchFunction = async (locationName: string) => {
         const apiData: IGeoCoordinatesData[] | null =
             await handleSearchLocationCallBackFunction(locationName);
@@ -53,11 +58,14 @@ export default function SearchLocationMenu({
                 locations,
                 handleSetCurrentLocationOnClick,
                 handleSaveSelectedLocationToListCallBackFunction,
+                maxNumSavedLocations,
+                currentSavedLocationsList,
+                setShowMaxLocationsPopUp,
             )
         ) : (
             <p className="no-location-found-text">no location found</p>
         );
-
+    console.log("pop up state", showMaxLocationsPopUp);
     return (
         <div className="menu-overlay">
             <div className="menu">
@@ -74,8 +82,23 @@ export default function SearchLocationMenu({
                     handleSearchButtonOnClickCallBackFunction={handleSearchButtonOnClick}
                     handleSearchCallBackFunction={handleLocationSearchFunction}
                 />
-
                 <div className="location-search-results-container">{locationCards}</div>
+                {showMaxLocationsPopUp ? (
+                    <PopUpMessageBox
+                        message="Couldn’t add any more locations, 
+                            remove others to add new ones"
+                        handleClosePopUpCallBackFunction={() => {
+                            setShowMaxLocationsPopUp(false);
+                        }}
+                    />
+                ) : null}
+                <PopUpMessageBox
+                    message="Couldn’t add any more locations, 
+                            remove others to add new ones"
+                    handleClosePopUpCallBackFunction={() => {
+                        setShowMaxLocationsPopUp(false);
+                    }}
+                />
             </div>
         </div>
     );
@@ -85,6 +108,9 @@ function createLocationCard(
     locations: IGeoCoordinatesData[],
     handleSetCurrentLocationFunctionOnClick: (geoData: IGeoCoordinatesData) => void,
     handleSaveSelectedLocationToListFunctionOnClick: (locationGeoData: IGeoCoordinatesData) => void,
+    _maxNumSavedLocations: number,
+    _currentSavedLocationsList: IGeoCoordinatesData[],
+    setShowMaxLocationsPopUpStateHook: Dispatch<SetStateAction<boolean>>,
 ) {
     let locationCards = [];
     for (let i = 0; i < locations.length; i++) {
@@ -107,8 +133,12 @@ function createLocationCard(
                     type="button"
                     className="add-location-button"
                     onClick={() => {
-                        handleSaveSelectedLocationToListFunctionOnClick(location);
-                        handleSetCurrentLocationFunctionOnClick(location);
+                        if (_currentSavedLocationsList.length < _maxNumSavedLocations) {
+                            handleSaveSelectedLocationToListFunctionOnClick(location);
+                            handleSetCurrentLocationFunctionOnClick(location);
+                        } else {
+                            setShowMaxLocationsPopUpStateHook(true);
+                        }
                     }}
                 >
                     <img src={addButtonIcon} alt="add button" />
