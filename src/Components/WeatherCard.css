@@ -23,7 +23,7 @@
 
 .weather-card {
     width: 97%;
-    border-radius: 2%;
+    border-radius: 5px;
     display: grid;
     grid-template-rows: auto auto;
 }
