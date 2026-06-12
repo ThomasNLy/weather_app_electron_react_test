@@ -41,6 +41,27 @@
     display: grid;
     grid-template-columns: 1fr;
     margin-top: 3em;
+    overflow-y: auto;
+    max-height: 50%;
+    min-width: 90%;
+    padding-top: 0.25em;
+    scrollbar-gutter: stable;
+    padding-right: 15px;
+}
+
+.location-list-container::-webkit-scrollbar {
+    width: 10px;
+}
+.location-list-container::-webkit-scrollbar-thumb {
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+.location-list-container::-webkit-scrollbar-track {
+    background-clip: padding-box;
+    border-radius: 10px;
+    background-color: rgba(83, 83, 83, 0.37);
 }
 
 .saved-location-card {
@@ -78,7 +99,13 @@
 .hide-saved-loc-menu-button {
     visibility: hidden;
 }
-
+@media screen and (max-width: 700px) {
+    .location-list-container {
+        scrollbar-gutter: stable;
+        padding-right: 40px;
+        overflow-x: hidden;
+    }
+}
 @media screen and (min-width: 700px) {
     .menu {
         width: 45%;
