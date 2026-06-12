@@ -43,7 +43,7 @@ function App() {
     const [currentDate, setCurrentDate] = useState<string>("");
     const weatherCardContainerRef = useRef<HTMLDivElement>(null);
 
-    const savedLocationsDataListCapacity = 5;
+    const savedLocationsDataListCapacity = 20;
 
     let initApp = async () => {
         const defaultLocation = await window.mainProcess.getDefaultLocation();
