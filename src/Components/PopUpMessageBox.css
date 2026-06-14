@@ -20,6 +20,9 @@
     max-height: 120px;
     background-color: var(--menu-bg-colour);
     border-radius: 5px;
+    border-color: rgba(0, 0, 0, 0.308);
+    border-width: 1px;
+    border-style: solid;
 }
 .pop-up-message-box-button {
     border-style: solid;
