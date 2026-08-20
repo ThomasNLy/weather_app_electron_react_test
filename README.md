@@ -29,6 +29,10 @@ The goal for this project was to create a weather app combining web development 
 - Electron.js
 - TypeScript
 
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Electron.js](https://img.shields.io/badge/Electron-%23191970.svg?style=for-the-badge&logo=Electron&logoColor=white)
+
 ### APIs
 
 - https://open-meteo.com/
