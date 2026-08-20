@@ -17,7 +17,7 @@
     - [3. Setting up the .env file](#3-setting-up-the-env-file)
         - [Option A Setting up the .env file using Open-Meteo API and Open-Meteo Geocoding API](#option-a-setting-up-the-env-file-using-open-meteo-api-and-open-meteo-geocoding-api)
         - [Option B Setting up the .env file using a weather API and geocoding API of your choice](#option-b-setting-up-the-env-file-using-a-weather-api-and-geocoding-api-of-your-choice)
-- [4. Run the project](#4-run-the-project)
+	- [4. Run the project](#4-run-the-project)
 
 ## About the project
 
