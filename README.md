@@ -19,6 +19,7 @@
         - [Option B Setting up the .env file using a weather API and geocoding API of your choice](#option-b-setting-up-the-env-file-using-a-weather-api-and-geocoding-api-of-your-choice)
 	- [4. Run the project](#4-run-the-project)
 
+
 ## About the project
 
 The goal for this project was to create a weather app combining web development technology (React.js, CSS, TypeScript) and bundling it with the Electron.js framework to create a desktop application. What differs this project compared to other weather app projects is the visual design of the application as a theme mechanic was implemented based on the current local weather based on the multiple music artists I follow and listen to.
@@ -326,18 +327,18 @@ The theme of the app changes based on the current local weather as a small fun f
 
 ### 3. Setting up the .env file
 
-To pull live weather data API keys need to be setup within a **.env** file within in the root directory (preferably from https://open-meteo.com/ as the structure of the code for the API call is configured to match the response formatting from it).
+To pull live weather data, API keys need to be setup within a **.env** file within in the root directory (preferably from https://open-meteo.com/ as the structure of the code for the API call is configured to match the response formatting from it).
 
 #### Option A Setting up the .env file using Open-Meteo API and Open-Meteo Geocoding API
 
-1. create an **.env** file within the root directory of the project and add in the following lines with the `WEATHER_API` field and replacing `YOUR_WEATHER_API_KEY_HERE` with your API key/API URL(either the free tier one or the paid version). The same steps are to be done with the `GEO_API` field as well by replacing `YOUR_GEO_API_KEY_HERE`.
+1. create an **.env** file within the root directory of the project and add in the following lines with the `WEATHER_API` field and replacing `YOUR_WEATHER_API_KEY_HERE` with your API key/API URL(either the free tier one or the paid version). The same steps are to be done with the `GEO_API` field as well by replacing `YOUR_GEO_API_KEY_HERE_WITH_SEARCH_BY_NAME_PARAMETER` (ensure that the geo coding api key has the *"search by name parameter"* attached to that field's value for the app to function properly). 
 
     ```
     WEATHER_API=YOUR_WEATHER_API_KEY_HERE
     WEATHER_API_LATITUDE_PARAMETER=latitude=
     WEATHER_API_LONGITUDE_PARAMETER=&longitude=
     WEATHER_API_FORECAST_PARAMETERS=&daily=weather_code,apparent_temperature_max,apparent_temperature_min,precipitation_probability_max,temperature_2m_max,temperature_2m_min&current=is_day,apparent_temperature,temperature_2m,weather_code&timezone=auto
-    GEO_API=YOUR_GEO_API_KEY_HERE
+    GEO_API=YOUR_GEO_API_KEY_HERE_WITH_SEARCH_BY_NAME_PARAMETER
     GEO_API_PARAMETERS=&count=5&language=en&format=json
     ```
 
@@ -347,14 +348,14 @@ To pull live weather data API keys need to be setup within a **.env** file withi
 
     ```
     WEATHER_API=YOUR_WEATHER_API_KEY_HERE
-    WEATHER_API_LATITUDE_PARAMETER=latitude=
-    WEATHER_API_LONGITUDE_PARAMETER=&longitude=
-    WEATHER_API_FORECAST_PARAMETERS=&daily=weather_code,apparent_temperature_max,apparent_temperature_min,precipitation_probability_max,temperature_2m_max,temperature_2m_min&current=is_day,apparent_temperature,temperature_2m,weather_code&timezone=auto
+    WEATHER_API_LATITUDE_PARAMETER=YOUR_WEATHER_API_LATITDUE_PARAMETER_HERE
+    WEATHER_API_LONGITUDE_PARAMETER=YOUR_WEATHER_API_LONGITUDE_PARAMETER_HERE
+    WEATHER_API_FORECAST_PARAMETERS=YOUR_WEATHER_API_FORECAST_PARAMETERS_HERE
     GEO_API=YOUR_GEO_API_KEY_HERE
     GEO_API_PARAMETERS=&count=5&language=en&format=json
     ```
 
-2. To configure the weather API parameters set the values for `WEATHER_API_LATITUDE_PARAMETER`, `WEATHER_API_LONGITUDE_PARAMETER` with the correct parameters that match the API of your choice. For the `WEATHER_API_FORECAST_PARAMETERS` field, set its value to match the API of your choice with the following parameters included:
+2. To configure the weather API parameters set the values for `WEATHER_API_LATITUDE_PARAMETER`, `WEATHER_API_LONGITUDE_PARAMETER` by replacing the `YOUR_WEATHER_API_LATITDUE_PARAMETER_HERE` and `YOUR_WEATHER_API_LONGITDUE_PARAMETER_HERE` with the correct parameters that match the API of your choice. For the `WEATHER_API_FORECAST_PARAMETERS` field, set its values to match the API of your choice **configured for a seven day forecast** with the following parameters included:
     - weather code (for daily weather variables)
     - apparent max temperature (for daily weather variables)
     - apparent min temperature (for daily weather variables)
@@ -363,6 +364,7 @@ To pull live weather data API keys need to be setup within a **.env** file withi
     - min temperature (2m) (for daily weather variables)
     - is day (for current weather variables)
     - weather code (for current weather variables)
+    - timezone (Set to automatic for local time zone detection)
 3. To configure the geo API field set the value for the `GEO_API_PARAMETERS` following the format for the geocoding API chosen to return a maximum result of **5 locations,** configured to English as the language, and in **JSON format.**
 4. Within `index.ts` the `fetchWeather()` function and the `fetchGeoLocationData()` function has to be modified to match response received when fetching data from the respective APIs.
     1. Modifying `fetchWeather()` function
